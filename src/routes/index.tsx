@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Upload, ArrowRight, BarChart3, MessageSquare, Zap, Shield, Cpu, MousePointerClick } from "lucide-react";
+import { Upload, ArrowRight, BarChart3, MessageSquare, Zap, Shield, Cpu } from "lucide-react";
 import { useRef } from "react";
 
 export const Route = createFileRoute("/")(
@@ -70,21 +70,14 @@ function Home() {
         </div>
 
         {/* CTA */}
-        <div className="page-enter page-enter-stagger-4 mt-10 flex items-center justify-center gap-4" style={{ transform: "translateZ(50px)" }}>
+        <div className="page-enter page-enter-stagger-4 mt-10" style={{ transform: "translateZ(50px)" }}>
           <Link
             to="/upload"
-            className="btn-primary inline-flex items-center gap-2.5 rounded-xl px-7 py-3.5 text-sm font-bold text-black transition-all"
+            className="btn-primary inline-flex items-center gap-2.5 rounded-xl px-8 py-4 text-sm font-bold text-black transition-all"
           >
             <Upload className="h-4 w-4" />
             Upload your data
             <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center gap-2 rounded-xl border border-[#222] bg-[#0a0a0a] px-6 py-3.5 text-sm font-medium text-[#ccc] hover:border-[#333] hover:text-white transition-all"
-          >
-            <MousePointerClick className="h-4 w-4" />
-            View demo
           </Link>
         </div>
       </div>
