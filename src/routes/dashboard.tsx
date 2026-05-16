@@ -17,7 +17,7 @@ interface Sections {
 }
 
 function renderBody(body: string) {
-  if (!body) return <span className="text-[#888]">—</span>;
+  if (!body) return <span className="text-[#6b7280]">—</span>;
   const lines = body.split("\n").filter(l => l.trim() !== "");
   return (
     <ul className="space-y-2">
@@ -28,7 +28,7 @@ function renderBody(body: string) {
           .replace(/\*\*(.+?)\*\*/g, "$1")
           .replace(/\*(.+?)\*/g, "$1");
         return (
-          <li key={i} className="flex gap-2.5 text-sm text-[#999] leading-relaxed">
+          <li key={i} className="flex gap-2.5 text-sm text-[#6b7280] leading-relaxed">
             {isBullet && <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-[#10b981]/50 mt-[7px]" />}
             <span className={isBullet ? "" : "list-none"}>{clean}</span>
           </li>
@@ -281,18 +281,18 @@ Sample rows (first 10 + last 5): ${JSON.stringify(sample)}`;
     <div className="py-8">
       <div className="flex flex-wrap items-start justify-between gap-4 page-enter page-enter-stagger-1">
         <div className="hero-spotlight">
-          <h1 className="text-3xl font-bold text-[#f0f0f0]">Dashboard</h1>
-          <p className="text-sm text-[#888]">AI-powered analysis of your dataset.</p>
+          <h1 className="text-3xl font-bold text-[#111827]">Dashboard</h1>
+          <p className="text-sm text-[#6b7280]">AI-powered analysis of your dataset.</p>
         </div>
         <div className="flex gap-2">
           <Button onClick={run} disabled={loading || !hasData}
-            className="btn-primary text-black border-0"
+            className="btn-primary text-white border-0"
           >
             <Play className="h-4 w-4" /> {loading ? "Analyzing..." : "Run Analysis"}
           </Button>
           {sections && (
             <Button onClick={downloadPDF} variant="outline"
-              className="border-[#1a1a1a] text-[#999] hover:bg-[#111111] hover:text-white"
+              className="border-[#e5e7eb] text-[#6b7280] hover:bg-[#f3f4f6] hover:text-white"
             >
               <Download className="h-4 w-4" /> Download PDF
             </Button>
@@ -317,15 +317,15 @@ Sample rows (first 10 + last 5): ${JSON.stringify(sample)}`;
           <div className="gradient-bg flex h-16 w-16 items-center justify-center rounded-2xl shadow-[0_0_40px_-8px_rgba(16,185,129,0.5)]">
             <BarChart3 className="h-8 w-8 text-white" />
           </div>
-          <h2 className="mt-6 text-xl font-semibold text-[#f0f0f0]">Upload data to begin</h2>
-          <p className="mt-2 max-w-md text-sm text-[#888]">
+          <h2 className="mt-6 text-xl font-semibold text-[#111827]">Upload data to begin</h2>
+          <p className="mt-2 max-w-md text-sm text-[#6b7280]">
             Once you upload a file, click Run Analysis to get AI-generated insights.
           </p>
         </div>
       )}
 
       {hasData && !sections && !loading && (
-        <div className="glass-card mt-4 p-6 text-sm text-[#999] page-enter page-enter-stagger-3">
+        <div className="glass-card mt-4 p-6 text-sm text-[#6b7280] page-enter page-enter-stagger-3">
           {report?.cleanedRows.toLocaleString()} rows · {columns.length} columns ready.
           <span className="ml-1 inline-flex items-center gap-1 text-[#10b981]">
             <Sparkles className="h-3 w-3" /> Click Run Analysis to start.
@@ -337,12 +337,12 @@ Sample rows (first 10 + last 5): ${JSON.stringify(sample)}`;
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           {[0, 1, 2, 3].map((i) => (
             <div key={i} className="glass-card p-6 page-enter" style={{ animationDelay: `${i * 80}ms` }}>
-              <Skeleton className="h-5 w-32 bg-[#111111]" />
+              <Skeleton className="h-5 w-32 bg-[#f3f4f6]" />
               <div className="mt-4 space-y-2">
-                <Skeleton className="h-3 w-full bg-[#111111]" />
-                <Skeleton className="h-3 w-5/6 bg-[#111111]" />
-                <Skeleton className="h-3 w-4/6 bg-[#111111]" />
-                <Skeleton className="h-3 w-3/6 bg-[#111111]" />
+                <Skeleton className="h-3 w-full bg-[#f3f4f6]" />
+                <Skeleton className="h-3 w-5/6 bg-[#f3f4f6]" />
+                <Skeleton className="h-3 w-4/6 bg-[#f3f4f6]" />
+                <Skeleton className="h-3 w-3/6 bg-[#f3f4f6]" />
               </div>
             </div>
           ))}
@@ -364,7 +364,7 @@ Sample rows (first 10 + last 5): ${JSON.stringify(sample)}`;
                 >
                   <Icon className="h-4 w-4 text-white" />
                 </div>
-                <h3 className="text-sm font-semibold text-[#f0f0f0] uppercase tracking-wide">{title}</h3>
+                <h3 className="text-sm font-semibold text-[#111827] uppercase tracking-wide">{title}</h3>
               </div>
               <div className="relative z-10">
                 {renderBody(body)}

@@ -11,12 +11,9 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="glass-card max-w-md p-10 text-center">
         <h1 className="gradient-text text-7xl font-bold">404</h1>
-        <h2 className="mt-4 text-xl font-semibold">Page not found</h2>
-        <p className="mt-2 text-sm text-[#666]">This page doesn't exist.</p>
-        <Link
-          to="/"
-          className="btn-primary mt-6 inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium text-black"
-        >
+        <h2 className="mt-4 text-xl font-semibold text-gray-900">Page not found</h2>
+        <p className="mt-2 text-sm text-gray-500">This page doesn't exist.</p>
+        <Link to="/" className="btn-primary mt-6 inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium">
           Go home
         </Link>
       </div>
@@ -36,18 +33,14 @@ export const Route = createRootRoute({
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" },
     ],
   }),
-  // Auth guard — runs before every route renders
   beforeLoad: async ({ location }) => {
     const isProtected = PROTECTED.some((p) => location.pathname.startsWith(p));
     if (!isProtected) return;
-
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      throw redirect({ to: "/upload" });
-    }
+    if (!session) { throw redirect({ to: "/upload" }); }
   },
   shellComponent: RootShell,
   component: RootComponent,
@@ -56,27 +49,18 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
+    <html lang="en">
+      <head><HeadContent /></head>
+      <body>{children}<Scripts /></body>
     </html>
   );
 }
 
 function RootComponent() {
   return (
-    <div className="noise-overlay relative min-h-screen overflow-hidden" style={{ backgroundColor: "#000000" }}>
-      <div className="animated-background" aria-hidden="true">
-        <span className="data-stream data-stream-1" />
-      </div>
-      <div className="perspective-grid" aria-hidden="true" />
+    <div className="relative min-h-screen" style={{ backgroundColor: "#f9fafb" }}>
       <Sidebar />
-      <main className="relative z-10 ml-72 px-8 py-4">
+      <main className="relative ml-[240px] min-h-screen px-8 py-6">
         <Outlet />
       </main>
     </div>

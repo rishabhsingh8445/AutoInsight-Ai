@@ -55,12 +55,12 @@ function LoginGate() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
           </svg>
         </div>
-        <h1 className="text-2xl font-bold mb-1 text-[#f0f0f0] relative z-10">Login to Continue</h1>
-        <p className="text-sm text-[#888] mb-8 relative z-10">Sign in to upload and analyze your data</p>
+        <h1 className="text-2xl font-bold mb-1 text-[#111827] relative z-10">Login to Continue</h1>
+        <p className="text-sm text-[#6b7280] mb-8 relative z-10">Sign in to upload and analyze your data</p>
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="relative z-10 w-full flex items-center justify-center gap-3 rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] px-4 py-3 text-sm font-medium text-white hover:bg-[#111111] transition-all disabled:opacity-50"
+          className="relative z-10 w-full flex items-center justify-center gap-3 rounded-lg border border-[#e5e7eb] bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all disabled:opacity-50"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -211,7 +211,7 @@ function UploadPage() {
   if (checkingAuth) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-[#888] text-sm">Loading...</div>
+        <div className="text-[#6b7280] text-sm">Loading...</div>
       </div>
     );
   }
@@ -221,8 +221,8 @@ function UploadPage() {
   return (
     <div className="mx-auto max-w-3xl py-12">
       <div className="page-enter page-enter-stagger-1 hero-spotlight">
-        <h1 className="text-4xl font-bold text-[#f0f0f0]">Upload <span className="gradient-text">data</span></h1>
-        <p className="mt-2 text-[#888]">CSV or Excel — we'll clean it and save it to your account.</p>
+        <h1 className="text-4xl font-bold text-[#111827]">Upload <span className="gradient-text">data</span></h1>
+        <p className="mt-2 text-[#6b7280]">CSV or Excel — we'll clean it and save it to your account.</p>
       </div>
 
       {/* Existing data banner */}
@@ -230,15 +230,15 @@ function UploadPage() {
         <div className="glass-card mt-6 flex items-center justify-between gap-4 border-[#10b981]/20 px-5 py-4 page-enter page-enter-stagger-2">
           <div className="flex items-center gap-3 text-sm">
             <FileSpreadsheet className="h-4 w-4 text-[#10b981] shrink-0" />
-            <span className="text-[#888]">
-              Dataset loaded: <span className="font-medium text-[#f0f0f0]">{columns.length} columns</span>
+            <span className="text-[#6b7280]">
+              Dataset loaded: <span className="font-medium text-[#111827]">{columns.length} columns</span>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => navigate({ to: "/tables" })} className="text-xs text-[#10b981] hover:underline">
               View data
             </button>
-            <span className="text-[#1a1a1a]">·</span>
+            <span className="text-[#e5e7eb]">·</span>
             <button
               onClick={() => { if (window.confirm("Clear existing dataset?")) clear(); }}
               className="text-xs text-[#f43f5e] hover:text-[#fb7185]"
@@ -269,15 +269,15 @@ function UploadPage() {
         >
           <UploadIcon className="h-8 w-8 text-white" />
         </div>
-        <h3 className="mt-6 text-lg font-semibold text-[#f0f0f0]">
+        <h3 className="mt-6 text-lg font-semibold text-[#111827]">
           {busy ? "Processing..." : "Drop your file here"}
         </h3>
-        <p className="mt-1 text-sm text-[#888]">or click to browse — .csv, .xlsx, .xls</p>
+        <p className="mt-1 text-sm text-[#6b7280]">or click to browse — .csv, .xlsx, .xls</p>
       </div>
 
       {/* Cloud save status */}
       {cloudStatus === "saving" && (
-        <div className="mt-4 flex items-center gap-2 text-sm text-[#888]">
+        <div className="mt-4 flex items-center gap-2 text-sm text-[#6b7280]">
           <RefreshCw className="h-3.5 w-3.5 animate-spin text-[#10b981]" /> Saving to cloud...
         </div>
       )}
@@ -296,7 +296,7 @@ function UploadPage() {
       {error && (
         <div className="glass-card mt-6 flex items-start gap-3 border-[#f43f5e]/40 p-4 text-sm">
           <AlertCircle className="mt-0.5 h-4 w-4 text-[#f43f5e]" />
-          <span className="text-[#f0f0f0]">{error}</span>
+          <span className="text-[#111827]">{error}</span>
         </div>
       )}
 
@@ -305,9 +305,9 @@ function UploadPage() {
         <div className="glass-card mt-6 p-6 page-enter page-enter-stagger-4">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5 text-[#10b981]" />
-            <h2 className="text-lg font-semibold text-[#f0f0f0]">Data Quality Report</h2>
+            <h2 className="text-lg font-semibold text-[#111827]">Data Quality Report</h2>
           </div>
-          <p className="mt-1 flex items-center gap-2 text-sm text-[#888]">
+          <p className="mt-1 flex items-center gap-2 text-sm text-[#6b7280]">
             <FileSpreadsheet className="h-4 w-4" /> {report.fileName}
           </p>
 
@@ -318,22 +318,22 @@ function UploadPage() {
             <Stat label="Issues fixed" value={report.emptyRowsRemoved + report.duplicatesRemoved} />
           </div>
 
-          <div className="mt-4 grid gap-2 text-sm text-[#999] md:grid-cols-2">
-            <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] px-3 py-2">
+          <div className="mt-4 grid gap-2 text-sm text-[#6b7280] md:grid-cols-2">
+            <div className="rounded-lg border border-[#e5e7eb] bg-[#ffffff] px-3 py-2">
               Empty rows removed: <span className="font-mono text-[#06b6d4]">{report.emptyRowsRemoved}</span>
             </div>
-            <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] px-3 py-2">
+            <div className="rounded-lg border border-[#e5e7eb] bg-[#ffffff] px-3 py-2">
               Duplicates removed: <span className="font-mono text-[#06b6d4]">{report.duplicatesRemoved}</span>
             </div>
           </div>
 
           <button
             onClick={() => navigate({ to: "/tables" })}
-            className="btn-primary mt-6 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-black"
+            className="btn-primary mt-6 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white"
           >
             View data <ArrowRight className="h-4 w-4" />
           </button>
-          <Link to="/dashboard" className="ml-2 inline-flex items-center gap-2 rounded-lg border border-[#1a1a1a] px-5 py-2.5 text-sm font-medium text-[#999] hover:bg-[#111111] hover:text-white transition-all">
+          <Link to="/dashboard" className="ml-2 inline-flex items-center gap-2 rounded-lg border border-[#e5e7eb] px-5 py-2.5 text-sm font-medium text-[#6b7280] hover:bg-[#f3f4f6] hover:text-white transition-all">
             Open dashboard
           </Link>
         </div>
@@ -341,16 +341,16 @@ function UploadPage() {
 
       {/* Dataset history */}
       <div className="mt-10 page-enter page-enter-stagger-5">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-[#f0f0f0]">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-[#111827]">
           <Clock className="h-4 w-4 text-[#10b981]" /> Your previous uploads
         </h2>
 
         {historyLoading && (
-          <div className="mt-4 text-sm text-[#888]">Loading history...</div>
+          <div className="mt-4 text-sm text-[#6b7280]">Loading history...</div>
         )}
 
         {!historyLoading && history.length === 0 && (
-          <p className="mt-4 text-sm text-[#555]">
+          <p className="mt-4 text-sm text-[#9ca3af]">
             No uploads yet — your datasets will appear here after upload.
           </p>
         )}
@@ -358,12 +358,12 @@ function UploadPage() {
         {!historyLoading && history.length > 0 && (
           <div className="mt-4 space-y-3">
             {history.map(record => (
-              <div key={record.id} className="glass-card flex items-center justify-between gap-4 px-5 py-4 transition-all hover:border-[#2a2a2a]">
+              <div key={record.id} className="glass-card flex items-center justify-between gap-4 px-5 py-4 transition-all hover:border-[#d1d5db]">
                 <div className="flex items-center gap-3 min-w-0">
                   <FileSpreadsheet className="h-4 w-4 text-[#10b981] shrink-0" />
                   <div className="min-w-0">
-                    <div className="text-sm font-medium truncate text-[#f0f0f0]">{record.file_name}</div>
-                    <div className="text-xs text-[#888] mt-0.5 font-mono">
+                    <div className="text-sm font-medium truncate text-[#111827]">{record.file_name}</div>
+                    <div className="text-xs text-[#6b7280] mt-0.5 font-mono">
                       {record.row_count.toLocaleString()} rows · {record.column_count} columns · {new Date(record.uploaded_at).toLocaleDateString()}
                     </div>
                     <div className={`mt-1 text-[10px] font-medium font-mono ${
@@ -371,7 +371,7 @@ function UploadPage() {
                         ? "text-[#f43f5e]"
                         : hoursUntilExpiry(record) <= 24
                         ? "text-[#f59e0b]"
-                        : "text-[#555]"
+                        : "text-[#9ca3af]"
                     }`}>
                       ⏳ {hoursUntilExpiry(record) > 0
                         ? `Deletes in ${hoursUntilExpiry(record)}h`
@@ -383,7 +383,7 @@ function UploadPage() {
                   <button
                     onClick={() => handleLoadFromHistory(record)}
                     disabled={loadingId === record.id}
-                    className="btn-primary inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-black disabled:opacity-50"
+                    className="btn-primary inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                   >
                     {loadingId === record.id
                       ? <><RefreshCw className="h-3 w-3 animate-spin" /> Loading...</>
@@ -393,7 +393,7 @@ function UploadPage() {
                   <button
                     onClick={() => handleDelete(record)}
                     disabled={deletingId === record.id}
-                    className="rounded-lg border border-[#1a1a1a] p-1.5 text-[#888] hover:text-[#f43f5e] hover:border-[#f43f5e]/30 transition-all disabled:opacity-50"
+                    className="rounded-lg border border-[#e5e7eb] p-1.5 text-[#6b7280] hover:text-[#f43f5e] hover:border-[#f43f5e]/30 transition-all disabled:opacity-50"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
@@ -409,7 +409,7 @@ function UploadPage() {
 
 function Stat({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) {
   return (
-    <div className={`rounded-xl border border-[#1a1a1a] p-4 card-3d ${highlight ? "bg-[#10b981]/10" : "bg-[#0a0a0a]"}`}
+    <div className={`rounded-xl border border-[#e5e7eb] p-4 card-3d ${highlight ? "bg-[#10b981]/10" : "bg-[#ffffff]"}`}
       onMouseMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width;
@@ -418,7 +418,7 @@ function Stat({ label, value, highlight }: { label: string; value: number; highl
       }}
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'perspective(800px) rotateX(0) rotateY(0)'; }}
     >
-      <div className="text-xs uppercase tracking-wider text-[#555] font-mono">{label}</div>
+      <div className="text-xs uppercase tracking-wider text-[#9ca3af] font-mono">{label}</div>
       <div className={`mt-1 text-2xl font-bold font-mono ${highlight ? "text-[#10b981]" : "text-[#06b6d4]"}`}>{value.toLocaleString()}</div>
     </div>
   );

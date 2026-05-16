@@ -93,8 +93,8 @@ function TablesPage() {
     return (
       <div className="mx-auto max-w-2xl py-20 text-center page-enter page-enter-stagger-1">
         <div className="glass-card p-12">
-          <h2 className="text-2xl font-bold text-[#f0f0f0]">No data yet</h2>
-          <p className="mt-2 text-[#888]">Upload a file to see your table here.</p>
+          <h2 className="text-2xl font-bold text-[#111827]">No data yet</h2>
+          <p className="mt-2 text-[#6b7280]">Upload a file to see your table here.</p>
           <Link to="/upload" className="btn-primary mt-6 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white">
             <Upload className="h-4 w-4" /> Upload data
           </Link>
@@ -107,17 +107,17 @@ function TablesPage() {
     <div className="py-8">
       <div className="flex flex-wrap items-center justify-between gap-4 page-enter page-enter-stagger-1">
         <div className="hero-spotlight">
-          <h1 className="text-3xl font-bold text-[#f0f0f0]">Tables</h1>
-          <p className="text-sm text-[#888]">{sorted.length.toLocaleString()} rows · {columns.length} columns</p>
+          <h1 className="text-3xl font-bold text-[#111827]">Tables</h1>
+          <p className="text-sm text-[#6b7280]">{sorted.length.toLocaleString()} rows · {columns.length} columns</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="glass-card flex items-center gap-2 px-3 py-2 chat-input-glow">
-            <Search className="h-4 w-4 text-[#555]" />
+            <Search className="h-4 w-4 text-[#9ca3af]" />
             <input
               value={query}
               onChange={(e) => { setQuery(e.target.value); setPage(0); }}
               placeholder="Search all columns..."
-              className="w-64 bg-transparent text-sm outline-none placeholder:text-[#555] text-[#f0f0f0]"
+              className="w-64 bg-transparent text-sm outline-none placeholder:text-[#9ca3af] text-[#111827]"
             />
           </div>
 
@@ -127,10 +127,10 @@ function TablesPage() {
             className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-all ${
               conditionalFormat
                 ? "border-[#10b981]/50 bg-[#10b981]/10 text-[#818cf8]"
-                : "border-[#1a1a1a] text-[#888] hover:bg-[#111111]"
+                : "border-[#e5e7eb] text-[#6b7280] hover:bg-[#f3f4f6]"
             }`}
           >
-            <span className="h-2 w-2 rounded-full" style={{ background: conditionalFormat ? "#10b981" : "#555" }} />
+            <span className="h-2 w-2 rounded-full" style={{ background: conditionalFormat ? "#10b981" : "#9ca3af" }} />
             Conditional Format
           </button>
 
@@ -145,7 +145,7 @@ function TablesPage() {
 
       {/* Legend */}
       {conditionalFormat && numericCols.size > 0 && (
-        <div className="mt-4 flex items-center gap-4 text-xs text-[#555] page-enter page-enter-stagger-2">
+        <div className="mt-4 flex items-center gap-4 text-xs text-[#9ca3af] page-enter page-enter-stagger-2">
           <span>Numeric scale:</span>
           <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full badge-low" style={{ background: "#f43f5e" }} /> Low</span>
           <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full badge-mid" style={{ background: "#f59e0b" }} /> Mid</span>
@@ -159,7 +159,7 @@ function TablesPage() {
             <thead style={{ background: "rgba(26, 26, 46, 0.8)" }}>
               <tr>
                 {columns.map((c) => (
-                  <th key={c} className="border-b border-[#1a1a1a] px-4 py-3 text-left font-semibold text-[#999]">
+                  <th key={c} className="border-b border-[#e5e7eb] px-4 py-3 text-left font-semibold text-[#6b7280]">
                     <button onClick={() => toggleSort(c)} className="flex items-center gap-1.5 hover:text-[#10b981] whitespace-nowrap transition-colors">
                       {c}
                       {numericCols.has(c) && conditionalFormat && (
@@ -185,7 +185,7 @@ function TablesPage() {
                             {String(val ?? "")}
                           </span>
                         ) : (
-                          <span className="text-[#999]">{String(val ?? "")}</span>
+                          <span className="text-[#6b7280]">{String(val ?? "")}</span>
                         )}
                       </td>
                     );
@@ -193,26 +193,26 @@ function TablesPage() {
                 </tr>
               ))}
               {slice.length === 0 && (
-                <tr><td colSpan={columns.length} className="px-4 py-12 text-center text-[#555]">No matching rows</td></tr>
+                <tr><td colSpan={columns.length} className="px-4 py-12 text-center text-[#9ca3af]">No matching rows</td></tr>
               )}
             </tbody>
           </table>
         </div>
 
-        <div className="flex items-center justify-between border-t border-[#1a1a1a] px-4 py-3 text-sm text-[#888]">
+        <div className="flex items-center justify-between border-t border-[#e5e7eb] px-4 py-3 text-sm text-[#6b7280]">
           <div className="font-mono">Page {current + 1} of {pages}</div>
           <div className="flex items-center gap-1">
             <button
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={current === 0}
-              className="rounded-md border border-[#1a1a1a] p-1.5 hover:bg-[#111111] disabled:opacity-40 transition-colors"
+              className="rounded-md border border-[#e5e7eb] p-1.5 hover:bg-[#f3f4f6] disabled:opacity-40 transition-colors"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
               onClick={() => setPage((p) => Math.min(pages - 1, p + 1))}
               disabled={current >= pages - 1}
-              className="rounded-md border border-[#1a1a1a] p-1.5 hover:bg-[#111111] disabled:opacity-40 transition-colors"
+              className="rounded-md border border-[#e5e7eb] p-1.5 hover:bg-[#f3f4f6] disabled:opacity-40 transition-colors"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
