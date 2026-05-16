@@ -64,7 +64,7 @@ function SafeMarkdown({ text, animate }: { text: string; animate?: boolean }) {
             parts.push(<strong key={key++}>{match[2]}</strong>);
           } else if (match[0].startsWith("`")) {
             parts.push(
-              <code key={key++} className="bg-[#f3f4f6] px-1.5 py-0.5 rounded text-xs font-mono text-[#06b6d4]">
+              <code key={key++} className="bg-[#f5f4f0] px-1.5 py-0.5 rounded text-xs font-mono text-[#06b6d4]">
                 {match[4]}
               </code>
             );
@@ -88,7 +88,7 @@ function formatWord(word: string): React.ReactNode {
     return <strong>{word.slice(2, -2)}</strong>;
   }
   if (word.startsWith("`") && word.endsWith("`")) {
-    return <code className="bg-[#f3f4f6] px-1 rounded text-xs font-mono text-[#06b6d4]">{word.slice(1, -1)}</code>;
+    return <code className="bg-[#f5f4f0] px-1 rounded text-xs font-mono text-[#06b6d4]">{word.slice(1, -1)}</code>;
   }
   return word;
 }
@@ -236,8 +236,8 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col py-8">
       <div className="page-enter page-enter-stagger-1 hero-spotlight">
-        <h1 className="text-3xl font-bold text-[#111827]">Chat</h1>
-        <p className="text-sm text-[#6b7280]">Ask questions about your data in plain English.</p>
+        <h1 className="text-3xl font-bold text-[#1a1a1a]">Chat</h1>
+        <p className="text-sm text-[#888]">Ask questions about your data in plain English.</p>
       </div>
 
 
@@ -251,10 +251,10 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
               >
                 <MessageSquare className="h-7 w-7 text-white" />
               </div>
-              <h2 className="mt-4 text-lg font-semibold text-[#111827]">
+              <h2 className="mt-4 text-lg font-semibold text-[#1a1a1a]">
                 {hasData ? "Ask anything about your dataset" : "Please upload a dataset first"}
               </h2>
-              <p className="mt-1 max-w-md text-sm text-[#6b7280]">
+              <p className="mt-1 max-w-md text-sm text-[#888]">
                 {hasData
                   ? `${rows.length.toLocaleString()} rows · ${columns.length} columns ready to analyze.`
                   : "Head to Upload to add a CSV or Excel file."}
@@ -270,8 +270,8 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
               <div
                 className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
                   m.role === "user"
-                    ? "chat-user-bubble border border-[#e5e7eb] text-[#111827]"
-                    : "border border-[#e5e7eb] text-[#111827]"
+                    ? "chat-user-bubble border border-[#e8e6e1] text-[#1a1a1a]"
+                    : "border border-[#e8e6e1] text-[#1a1a1a]"
                 }`}
                 style={m.role === "assistant" ? { background: "rgba(10, 10, 10, 0.8)" } : undefined}
               >
@@ -285,7 +285,7 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
 
           {loading && (
             <div className="flex justify-start">
-              <div className="flex gap-1.5 rounded-2xl border border-[#e5e7eb] px-4 py-3" style={{ background: "rgba(10, 10, 10, 0.8)" }}>
+              <div className="flex gap-1.5 rounded-2xl border border-[#e8e6e1] px-4 py-3" style={{ background: "rgba(10, 10, 10, 0.8)" }}>
                 <span className="h-2 w-2 animate-bounce rounded-full bg-[#10b981] [animation-delay:-0.3s]" />
                 <span className="h-2 w-2 animate-bounce rounded-full bg-[#06b6d4] [animation-delay:-0.15s]" />
                 <span className="h-2 w-2 animate-bounce rounded-full bg-[#a855f7]" />
@@ -300,7 +300,7 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
           </div>
         )}
 
-        <div className="flex gap-2 border-t border-[#e5e7eb] p-4 chat-input-glow">
+        <div className="flex gap-2 border-t border-[#e8e6e1] p-4 chat-input-glow">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -312,7 +312,7 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
             }}
             placeholder={hasData ? "Ask about your data..." : "Upload a dataset to start chatting"}
             disabled={loading}
-            className="border-[#e5e7eb] bg-[#ffffff] text-[#111827] placeholder:text-[#9ca3af] focus:border-[#10b981] focus:ring-[#10b981]/20"
+            className="border-[#e8e6e1] bg-white text-[#1a1a1a] placeholder:text-[#aaa] focus:border-[#10b981] focus:ring-[#10b981]/20"
           />
           <Button onClick={send} disabled={loading || !input.trim()}
             className="btn-primary text-white border-0"

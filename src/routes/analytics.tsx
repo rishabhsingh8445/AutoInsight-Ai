@@ -16,9 +16,9 @@ const COLORS = ["#10b981", "#06b6d4", "#f59e0b", "#10b981", "#f43f5e", "#a855f7"
 
 const tooltipStyle = {
   background: "rgba(5,5,8,0.96)",
-  border: "1px solid #e5e7eb",
+  border: "1px solid #e8e6e1",
   borderRadius: 10,
-  color: "#111827",
+  color: "#1a1a1a",
   fontSize: 12,
   fontFamily: "'JetBrains Mono', monospace",
   boxShadow: "0 8px 32px -8px rgba(0,0,0,0.6)",
@@ -526,8 +526,8 @@ function AnalyticsPage() {
     return (
       <div className="mx-auto max-w-2xl py-20 text-center page-enter page-enter-stagger-1">
         <div className="glass-card p-12">
-          <h2 className="text-2xl font-bold text-[#111827]">No data yet</h2>
-          <p className="mt-2 text-[#6b7280]">Upload a file to see analytics.</p>
+          <h2 className="text-2xl font-bold text-[#1a1a1a]">No data yet</h2>
+          <p className="mt-2 text-[#888]">Upload a file to see analytics.</p>
           <Link to="/upload" className="btn-primary mt-6 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white">
             <Upload className="h-4 w-4" /> Upload data
           </Link>
@@ -540,8 +540,8 @@ function AnalyticsPage() {
     <div className="py-8">
       <div className="flex items-center justify-between mb-6 page-enter page-enter-stagger-1">
         <div className="hero-spotlight">
-          <h1 className="text-3xl font-bold text-[#111827]">Analytics</h1>
-          <p className="text-sm text-[#6b7280]">Interactive data exploration</p>
+          <h1 className="text-3xl font-bold text-[#1a1a1a]">Analytics</h1>
+          <p className="text-sm text-[#888]">Interactive data exploration</p>
         </div>
         <div className="flex items-center gap-2">
           {/* Download current view as high-res snapshot */}
@@ -562,7 +562,7 @@ function AnalyticsPage() {
                 onChange={e => setBookmarkName(e.target.value)}
                 onKeyDown={e => { if (e.key === "Enter") saveBookmark(); if (e.key === "Escape") setShowNameInput(false); }}
                 placeholder="Snapshot name..."
-                className="rounded-lg border border-white/10 bg-[#f3f4f6] px-3 py-1.5 text-xs text-white outline-none focus:border-purple-500 w-40"
+                className="rounded-lg border border-white/10 bg-[#f5f4f0] px-3 py-1.5 text-xs text-white outline-none focus:border-purple-500 w-40"
               />
               <button onClick={saveBookmark} className="gradient-bg rounded-lg px-3 py-1.5 text-xs font-medium text-white">Save</button>
               <button onClick={() => setShowNameInput(false)} className="text-xs text-muted-foreground hover:text-white">Cancel</button>
@@ -640,7 +640,7 @@ function AnalyticsPage() {
               onMouseLeave={(e) => { e.currentTarget.style.transform = 'perspective(800px) rotateX(0) rotateY(0)'; }}
             >
               <div className="specular-highlight" />
-              <div className="text-xs text-[#9ca3af] uppercase tracking-wider mb-1 font-mono relative z-10">{kpi.label}</div>
+              <div className="text-xs text-[#aaa] uppercase tracking-wider mb-1 font-mono relative z-10">{kpi.label}</div>
               <div className="text-2xl font-bold font-mono relative z-10" style={{ color: kpi.color }}>{kpi.value}</div>
             </div>
           ))}
@@ -655,7 +655,7 @@ function AnalyticsPage() {
               <div key={col}>
                 <label className="text-xs text-muted-foreground mb-1 block">{col}</label>
                 <select value={filters[col] ?? ""} onChange={e => setFilters(f => ({ ...f, [col]: e.target.value }))}
-                  className="w-full rounded-lg border border-white/10 bg-[#f3f4f6] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
+                  className="w-full rounded-lg border border-white/10 bg-[#f5f4f0] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
                   <option value="">All</option>
                   {[...new Set(rows.map(r => String(r[col] ?? "")))].filter(Boolean).slice(0, 20).map(v => (
                     <option key={v} value={v}>{v}</option>
@@ -684,14 +684,14 @@ function AnalyticsPage() {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">X Axis</label>
               <select value={activeX} onChange={e => { setXCol(e.target.value); setDrillStack([]); }}
-                className="w-full rounded-lg border border-white/10 bg-[#f3f4f6] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
+                className="w-full rounded-lg border border-white/10 bg-[#f5f4f0] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
                 {columns.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Y Axis</label>
               <select value={activeY} onChange={e => setYCol(e.target.value)}
-                className="w-full rounded-lg border border-white/10 bg-[#f3f4f6] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
+                className="w-full rounded-lg border border-white/10 bg-[#f5f4f0] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
                 {columns.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
@@ -749,9 +749,9 @@ function AnalyticsPage() {
                       </filter>
                     ))}
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                  <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#9ca3af" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "…" : payload.value}</text>)} height={60} interval={0} />
-                  <YAxis tick={{ fill: "#9ca3af", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f5f4f0" />
+                  <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#aaa" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "…" : payload.value}</text>)} height={60} interval={0} />
+                  <YAxis tick={{ fill: "#aaa", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} formatter={(value) => [value, "Count"]} labelFormatter={(label) => canDrillDown ? `${label} (click to drill down)` : label} />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]} animationDuration={800} animationBegin={0}>{chartData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} style={{ filter: `drop-shadow(0 0 8px ${COLORS[i % COLORS.length]}80)` }} />)}</Bar>
                 </BarChart>
@@ -766,9 +766,9 @@ function AnalyticsPage() {
                       <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#10b981" floodOpacity="0.6" />
                     </filter>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                  <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#9ca3af" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "…" : payload.value}</text>)} height={60} interval={0} />
-                  <YAxis tick={{ fill: "#9ca3af", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f5f4f0" />
+                  <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#aaa" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "…" : payload.value}</text>)} height={60} interval={0} />
+                  <YAxis tick={{ fill: "#aaa", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                   <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={2.5} fill="url(#lineAreaGrad)" dot={false} style={{ filter: "url(#line-glow)" }} />
                 </AreaChart>
@@ -788,13 +788,13 @@ function AnalyticsPage() {
                     {chartData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} stroke="#000000" strokeWidth={2} />)}
                   </Pie>
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} formatter={(value, name) => [value, canDrillDown ? `${name} (click to drill)` : name]} />
-                  <Legend wrapperStyle={{ color: "#6b7280", fontSize: 12 }} />
+                  <Legend wrapperStyle={{ color: "#888", fontSize: 12 }} />
                 </PieChart>
               ) : (
                 <ScatterChart>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                  <XAxis dataKey="x" name={activeX} tick={{ fill: "#9ca3af", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
-                  <YAxis dataKey="y" name={activeY} tick={{ fill: "#9ca3af", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f5f4f0" />
+                  <XAxis dataKey="x" name={activeX} tick={{ fill: "#aaa", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
+                  <YAxis dataKey="y" name={activeY} tick={{ fill: "#aaa", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} cursor={{ strokeDasharray: "3 3" }} />
                   <Scatter data={chartData} fill="#06b6d4" animationDuration={800} />
                 </ScatterChart>
@@ -855,9 +855,9 @@ function AnalyticsPage() {
               </div>
               <ResponsiveContainer width="100%" height={160}>
                 <BarChart data={data} barSize={20}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                  <XAxis dataKey="name" tick={{ fill: "#9ca3af", fontSize: 9, fontFamily: "'JetBrains Mono', monospace" }} />
-                  <YAxis tick={{ fill: "#9ca3af", fontSize: 9, fontFamily: "'JetBrains Mono', monospace" }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f5f4f0" />
+                  <XAxis dataKey="name" tick={{ fill: "#aaa", fontSize: 9, fontFamily: "'JetBrains Mono', monospace" }} />
+                  <YAxis tick={{ fill: "#aaa", fontSize: 9, fontFamily: "'JetBrains Mono', monospace" }} />
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                   <Bar dataKey="value" radius={[4, 4, 0, 0]} animationDuration={600}>
                     {data.map((_, i) => <Cell key={i} fill={COLORS[(idx + i) % COLORS.length]} />)}

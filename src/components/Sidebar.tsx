@@ -13,11 +13,7 @@ const navItems = [
   { to: "/chat", label: "Chat", icon: MessageSquare },
 ] as const;
 
-interface UserProfile {
-  name: string;
-  email: string;
-  avatar: string | null;
-}
+interface UserProfile { name: string; email: string; avatar: string | null; }
 
 export function Sidebar() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -29,126 +25,100 @@ export function Sidebar() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         const u = session.user;
-        setProfile({
-          name: u.user_metadata?.full_name ?? u.user_metadata?.name ?? "User",
-          email: u.email ?? "",
-          avatar: u.user_metadata?.avatar_url ?? u.user_metadata?.picture ?? null,
-        });
+        setProfile({ name: u.user_metadata?.full_name ?? u.user_metadata?.name ?? "User", email: u.email ?? "", avatar: u.user_metadata?.avatar_url ?? u.user_metadata?.picture ?? null });
       }
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       if (session?.user) {
         const u = session.user;
-        setProfile({
-          name: u.user_metadata?.full_name ?? u.user_metadata?.name ?? "User",
-          email: u.email ?? "",
-          avatar: u.user_metadata?.avatar_url ?? u.user_metadata?.picture ?? null,
-        });
-      } else { setProfile(null); }
+        setProfile({ name: u.user_metadata?.full_name ?? u.user_metadata?.name ?? "User", email: u.email ?? "", avatar: u.user_metadata?.avatar_url ?? u.user_metadata?.picture ?? null });
+      } else setProfile(null);
     });
     return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    const h = (e: MouseEvent) => { if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false); };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
   }, []);
 
-  const handleLogout = async () => {
-    setMenuOpen(false);
-    clear();
-    await supabase.auth.signOut();
-    window.location.href = "/upload";
-  };
+  const handleLogout = async () => { setMenuOpen(false); clear(); await supabase.auth.signOut(); window.location.href = "/upload"; };
 
-  const initials = profile
-    ? profile.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2)
-    : "U";
+  const initials = profile ? profile.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2) : "U";
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 flex w-[240px] flex-col bg-white border-r border-gray-200">
+    <aside className="fixed inset-y-0 left-0 z-30 flex w-[220px] flex-col"
+      style={{ background: "rgba(250,249,246,0.75)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", borderRight: "1px solid rgba(0,0,0,0.06)" }}>
+
       {/* Logo */}
-      <div className="px-5 pt-6 pb-4">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg"
+      <div className="px-6 pt-7 pb-8">
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
             style={{ background: "linear-gradient(135deg, #10b981, #0ea5e9)" }}>
-            <Sparkles className="h-4 w-4 text-white" />
+            <Sparkles className="h-3.5 w-3.5 text-white" />
           </div>
           <div>
-            <div className="text-sm font-bold text-gray-900 leading-none">AutoInsight</div>
-            <div className="text-[10px] font-semibold text-emerald-500 tracking-widest uppercase">AI</div>
+            <div className="text-[13px] font-bold text-[#1a1a1a] leading-none" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>AutoInsight</div>
+            <div className="text-[9px] font-semibold text-emerald-500 tracking-[0.25em] uppercase mt-0.5">AI</div>
           </div>
         </Link>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 space-y-0.5">
-        <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-3 pb-2">Menu</div>
+      {/* Nav */}
+      <nav className="flex-1 px-3 space-y-1">
         {navItems.map(({ to, label, icon: Icon }) => (
           <Link
             key={to}
             to={to}
             activeOptions={{ exact: to === "/" }}
             activeProps={{ className: "sidebar-link-active" }}
-            inactiveProps={{ className: "text-gray-500 hover:text-gray-900" }}
-            className="sidebar-link flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all"
+            inactiveProps={{ className: "text-[#888]" }}
+            className="sidebar-link flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[13px] font-medium"
           >
-            <Icon className="sidebar-icon h-4 w-4" />
+            <Icon className="sidebar-icon h-[16px] w-[16px]" />
             {label}
           </Link>
         ))}
       </nav>
 
-      {/* User section */}
+      {/* User */}
       {profile && (
-        <div ref={menuRef} className="relative border-t border-gray-100 p-3">
+        <div ref={menuRef} className="relative px-3 pb-4">
+          <div className="mb-3" style={{ height: "1px", background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent)" }} />
           <button
             onClick={() => setMenuOpen(v => !v)}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-all hover:bg-gray-50"
+            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 transition-all hover:bg-black/[0.03]"
           >
             {profile.avatar ? (
-              <img src={profile.avatar} alt={profile.name} referrerPolicy="no-referrer"
-                className="h-8 w-8 rounded-full object-cover ring-2 ring-gray-100" />
+              <img src={profile.avatar} alt="" referrerPolicy="no-referrer" className="h-7 w-7 rounded-full object-cover" />
             ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white"
-                style={{ background: "linear-gradient(135deg, #10b981, #0ea5e9)" }}>
-                {initials}
-              </div>
+              <div className="flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                style={{ background: "linear-gradient(135deg, #10b981, #0ea5e9)" }}>{initials}</div>
             )}
             <div className="flex-1 min-w-0 text-left">
-              <div className="text-xs font-semibold text-gray-900 truncate">{profile.name}</div>
-              <div className="text-[10px] text-gray-400 truncate">{profile.email}</div>
+              <div className="text-[11px] font-semibold text-[#1a1a1a] truncate">{profile.name}</div>
             </div>
-            <ChevronDown className={`h-3 w-3 text-gray-400 shrink-0 transition-transform ${menuOpen ? "rotate-180" : ""}`} />
+            <ChevronDown className={`h-3 w-3 text-[#bbb] shrink-0 transition-transform duration-300 ${menuOpen ? "rotate-180" : ""}`} />
           </button>
 
           {menuOpen && (
-            <div className="absolute bottom-full left-3 right-3 mb-2 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
-              <div className="flex items-center gap-3 border-b border-gray-100 px-4 py-3">
+            <div className="absolute bottom-full left-3 right-3 mb-2 overflow-hidden rounded-2xl border border-black/[0.06] shadow-lg"
+              style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(20px)" }}>
+              <div className="flex items-center gap-3 px-4 py-3 border-b border-black/[0.04]">
                 {profile.avatar ? (
-                  <img src={profile.avatar} alt={profile.name} referrerPolicy="no-referrer" className="h-10 w-10 rounded-full" />
+                  <img src={profile.avatar} alt="" referrerPolicy="no-referrer" className="h-9 w-9 rounded-full" />
                 ) : (
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white"
-                    style={{ background: "linear-gradient(135deg, #10b981, #0ea5e9)" }}>
-                    {initials}
-                  </div>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold text-white"
+                    style={{ background: "linear-gradient(135deg, #10b981, #0ea5e9)" }}>{initials}</div>
                 )}
                 <div className="min-w-0">
-                  <div className="text-sm font-semibold text-gray-900 truncate">{profile.name}</div>
-                  <div className="text-xs text-gray-400 truncate">{profile.email}</div>
-                </div>
-              </div>
-              <div className="px-4 py-2 border-b border-gray-100">
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <User className="h-3 w-3" />
-                  <span>Signed in with Google</span>
+                  <div className="text-sm font-semibold text-[#1a1a1a] truncate">{profile.name}</div>
+                  <div className="text-[11px] text-[#aaa] truncate">{profile.email}</div>
                 </div>
               </div>
               <button onClick={handleLogout}
-                className="flex w-full items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors">
+                className="flex w-full items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50/50 transition-colors">
                 <LogOut className="h-4 w-4" /> Sign out
               </button>
             </div>

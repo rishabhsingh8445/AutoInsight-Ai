@@ -3,7 +3,6 @@ import appCss from "../styles.css?url";
 import { Sidebar } from "@/components/Sidebar";
 import { supabase } from "@/lib/supabase";
 
-// Routes that require login
 const PROTECTED = ["/dashboard", "/tables", "/analytics", "/chat"];
 
 function NotFoundComponent() {
@@ -11,9 +10,9 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="glass-card max-w-md p-10 text-center">
         <h1 className="gradient-text text-7xl font-bold">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-gray-900">Page not found</h2>
-        <p className="mt-2 text-sm text-gray-500">This page doesn't exist.</p>
-        <Link to="/" className="btn-primary mt-6 inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium">
+        <h2 className="mt-4 text-xl font-semibold text-[#1a1a1a]">Page not found</h2>
+        <p className="mt-2 text-sm text-[#888]">This page doesn't exist.</p>
+        <Link to="/" className="btn-primary mt-6 inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm">
           Go home
         </Link>
       </div>
@@ -33,7 +32,7 @@ export const Route = createRootRoute({
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" },
     ],
   }),
   beforeLoad: async ({ location }) => {
@@ -58,9 +57,16 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <div className="relative min-h-screen" style={{ backgroundColor: "#f9fafb" }}>
+    <div className="grain relative min-h-screen">
+      {/* Ambient floating blobs — visible on every page */}
+      <div className="ambient-blobs">
+        <div className="blob blob-1" />
+        <div className="blob blob-2" />
+        <div className="blob blob-3" />
+      </div>
+
       <Sidebar />
-      <main className="relative ml-[240px] min-h-screen px-8 py-6">
+      <main className="relative z-10 ml-[220px] min-h-screen px-10 py-8">
         <Outlet />
       </main>
     </div>
