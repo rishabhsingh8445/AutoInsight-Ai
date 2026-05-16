@@ -64,7 +64,7 @@ function SafeMarkdown({ text, animate }: { text: string; animate?: boolean }) {
             parts.push(<strong key={key++}>{match[2]}</strong>);
           } else if (match[0].startsWith("`")) {
             parts.push(
-              <code key={key++} className="bg-[#1a1a2e] px-1.5 py-0.5 rounded text-xs font-mono text-[#06b6d4]">
+              <code key={key++} className="bg-[#111111] px-1.5 py-0.5 rounded text-xs font-mono text-[#06b6d4]">
                 {match[4]}
               </code>
             );
@@ -88,7 +88,7 @@ function formatWord(word: string): React.ReactNode {
     return <strong>{word.slice(2, -2)}</strong>;
   }
   if (word.startsWith("`") && word.endsWith("`")) {
-    return <code className="bg-[#1a1a2e] px-1 rounded text-xs font-mono text-[#06b6d4]">{word.slice(1, -1)}</code>;
+    return <code className="bg-[#111111] px-1 rounded text-xs font-mono text-[#06b6d4]">{word.slice(1, -1)}</code>;
   }
   return word;
 }
@@ -236,8 +236,8 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col py-8">
       <div className="page-enter page-enter-stagger-1 hero-spotlight">
-        <h1 className="text-3xl font-bold text-[#e8e8f0]">Chat</h1>
-        <p className="text-sm text-[#71717a]">Ask questions about your data in plain English.</p>
+        <h1 className="text-3xl font-bold text-[#f0f0f0]">Chat</h1>
+        <p className="text-sm text-[#888]">Ask questions about your data in plain English.</p>
       </div>
 
 
@@ -247,19 +247,19 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
           {messages.length === 0 && !loading && (
             <div className="flex h-full flex-col items-center justify-center text-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl"
-                style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)", boxShadow: "0 0 40px -8px rgba(99,102,241,0.5)" }}
+                style={{ background: "linear-gradient(135deg, #10b981, #22d3ee)", boxShadow: "0 0 40px -8px rgba(16,185,129,0.5)" }}
               >
                 <MessageSquare className="h-7 w-7 text-white" />
               </div>
-              <h2 className="mt-4 text-lg font-semibold text-[#e8e8f0]">
+              <h2 className="mt-4 text-lg font-semibold text-[#f0f0f0]">
                 {hasData ? "Ask anything about your dataset" : "Please upload a dataset first"}
               </h2>
-              <p className="mt-1 max-w-md text-sm text-[#71717a]">
+              <p className="mt-1 max-w-md text-sm text-[#888]">
                 {hasData
                   ? `${rows.length.toLocaleString()} rows · ${columns.length} columns ready to analyze.`
                   : "Head to Upload to add a CSV or Excel file."}
               </p>
-              <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#6366f1]/30 bg-[#6366f1]/10 px-3 py-1 text-xs font-medium text-[#818cf8]">
+              <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#10b981]/30 bg-[#10b981]/10 px-3 py-1 text-xs font-medium text-[#818cf8]">
                 <Sparkles className="h-3 w-3" /> Powered by Groq
               </div>
             </div>
@@ -270,10 +270,10 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
               <div
                 className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
                   m.role === "user"
-                    ? "chat-user-bubble border border-[#2a2a3e] text-[#e8e8f0]"
-                    : "border border-[#2a2a3e] text-[#e8e8f0]"
+                    ? "chat-user-bubble border border-[#1a1a1a] text-[#f0f0f0]"
+                    : "border border-[#1a1a1a] text-[#f0f0f0]"
                 }`}
-                style={m.role === "assistant" ? { background: "rgba(13, 13, 26, 0.8)" } : undefined}
+                style={m.role === "assistant" ? { background: "rgba(10, 10, 10, 0.8)" } : undefined}
               >
                 {m.role === "assistant"
                   ? <SafeMarkdown text={m.content} animate={i === latestAiIndex} />
@@ -285,8 +285,8 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
 
           {loading && (
             <div className="flex justify-start">
-              <div className="flex gap-1.5 rounded-2xl border border-[#2a2a3e] px-4 py-3" style={{ background: "rgba(13, 13, 26, 0.8)" }}>
-                <span className="h-2 w-2 animate-bounce rounded-full bg-[#6366f1] [animation-delay:-0.3s]" />
+              <div className="flex gap-1.5 rounded-2xl border border-[#1a1a1a] px-4 py-3" style={{ background: "rgba(10, 10, 10, 0.8)" }}>
+                <span className="h-2 w-2 animate-bounce rounded-full bg-[#10b981] [animation-delay:-0.3s]" />
                 <span className="h-2 w-2 animate-bounce rounded-full bg-[#06b6d4] [animation-delay:-0.15s]" />
                 <span className="h-2 w-2 animate-bounce rounded-full bg-[#a855f7]" />
               </div>
@@ -300,7 +300,7 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
           </div>
         )}
 
-        <div className="flex gap-2 border-t border-[#2a2a3e] p-4 chat-input-glow">
+        <div className="flex gap-2 border-t border-[#1a1a1a] p-4 chat-input-glow">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -312,7 +312,7 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
             }}
             placeholder={hasData ? "Ask about your data..." : "Upload a dataset to start chatting"}
             disabled={loading}
-            className="border-[#2a2a3e] bg-[#0d0d1a] text-[#e8e8f0] placeholder:text-[#52525b] focus:border-[#6366f1] focus:ring-[#6366f1]/20"
+            className="border-[#1a1a1a] bg-[#0a0a0a] text-[#f0f0f0] placeholder:text-[#555] focus:border-[#10b981] focus:ring-[#10b981]/20"
           />
           <Button onClick={send} disabled={loading || !input.trim()}
             className="btn-primary text-white border-0"

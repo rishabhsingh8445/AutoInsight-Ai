@@ -22,7 +22,6 @@ interface UserProfile {
 export function Sidebar() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-
   const menuRef = useRef<HTMLDivElement>(null);
   const { clear } = useDataStore();
 
@@ -66,7 +65,7 @@ export function Sidebar() {
 
   const handleLogout = async () => {
     setMenuOpen(false);
-    clear(); // Wipe localStorage data on logout
+    clear();
     await supabase.auth.signOut();
     window.location.href = "/upload";
   };
@@ -77,30 +76,32 @@ export function Sidebar() {
 
   return (
     <>
-      <aside className="glass-card fixed top-4 bottom-4 left-4 z-30 flex w-60 flex-col p-4"
-        style={{ background: "linear-gradient(135deg, #13131f, #0d0d1a)", borderColor: "#2a2a3e" }}
+      <aside className="fixed top-4 bottom-4 left-4 z-30 flex w-60 flex-col p-4 rounded-2xl border border-[#1a1a1a]"
+        style={{ background: "#050505" }}
       >
-        {/* Logo with shimmer */}
-        <Link to="/" className="mb-8 flex items-center gap-2 px-2">
-          <div className="gradient-bg flex h-9 w-9 items-center justify-center rounded-lg shadow-[0_0_16px_-2px_rgba(99,102,241,0.5)]">
-            <Sparkles className="h-5 w-5 text-white" />
+        {/* Logo */}
+        <Link to="/" className="mb-8 flex items-center gap-2.5 px-2">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl"
+            style={{ background: "linear-gradient(135deg, #10b981, #22d3ee)", boxShadow: "0 0 20px -4px rgba(16,185,129,0.4)" }}
+          >
+            <Sparkles className="h-5 w-5 text-black" />
           </div>
           <div>
-            <div className="logo-shimmer text-sm font-semibold leading-none">AutoInsight</div>
-            <div className="gradient-text text-xs font-medium">AI</div>
+            <div className="logo-shimmer text-sm font-bold leading-none tracking-tight">AutoInsight</div>
+            <div className="gradient-text text-[10px] font-semibold tracking-widest uppercase">AI</div>
           </div>
         </Link>
 
         {/* Navigation */}
-        <nav className="flex flex-1 flex-col gap-1">
+        <nav className="flex flex-1 flex-col gap-0.5">
           {items.map(({ to, label, icon: Icon }) => (
             <Link
               key={to}
               to={to}
               activeOptions={{ exact: to === "/" }}
               activeProps={{ className: "sidebar-link-active" }}
-              inactiveProps={{ className: "text-[#71717a] hover:text-[#e8e8f0]" }}
-              className="sidebar-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all"
+              inactiveProps={{ className: "text-[#666] hover:text-[#ccc]" }}
+              className="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all"
             >
               <Icon className="sidebar-icon h-4 w-4" />
               {label}
@@ -108,14 +109,12 @@ export function Sidebar() {
           ))}
         </nav>
 
-
-
         {/* User profile */}
         {profile && (
           <div ref={menuRef} className="relative mt-2">
             <button
               onClick={() => setMenuOpen(v => !v)}
-              className="flex w-full items-center gap-3 rounded-xl border border-[#2a2a3e] bg-[#0d0d1a] px-3 py-2.5 transition-all hover:border-[#3a3a50] hover:bg-[#13131f]"
+              className="flex w-full items-center gap-3 rounded-xl border border-[#1a1a1a] bg-[#050505] px-3 py-2.5 transition-all hover:border-[#2a2a2a] hover:bg-[#0a0a0a]"
             >
               <div className="relative shrink-0">
                 {profile.avatar ? (
@@ -123,44 +122,44 @@ export function Sidebar() {
                     src={profile.avatar}
                     alt={profile.name}
                     referrerPolicy="no-referrer"
-                    className="h-8 w-8 rounded-full object-cover ring-2 ring-[#6366f1]/40"
+                    className="h-8 w-8 rounded-full object-cover ring-2 ring-[#10b981]/30"
                   />
                 ) : (
-                  <div className="gradient-bg flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white ring-2 ring-[#6366f1]/40">
+                  <div className="gradient-bg flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-black ring-2 ring-[#10b981]/30">
                     {initials}
                   </div>
                 )}
-                <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-[#0d0d1a]" />
+                <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-[#050505]" />
               </div>
 
               <div className="flex-1 min-w-0 text-left">
-                <div className="text-xs font-semibold truncate text-[#e8e8f0]">{profile.name}</div>
-                <div className="text-[10px] text-[#71717a] truncate">{profile.email}</div>
+                <div className="text-xs font-semibold truncate text-[#f0f0f0]">{profile.name}</div>
+                <div className="text-[10px] text-[#555] truncate">{profile.email}</div>
               </div>
 
-              <ChevronDown className={`h-3 w-3 text-[#71717a] transition-transform shrink-0 ${menuOpen ? "rotate-180" : ""}`} />
+              <ChevronDown className={`h-3 w-3 text-[#555] transition-transform shrink-0 ${menuOpen ? "rotate-180" : ""}`} />
             </button>
 
             {menuOpen && (
-              <div className="absolute bottom-full left-0 right-0 mb-2 overflow-hidden rounded-xl border border-[#2a2a3e] shadow-xl"
-                style={{ background: "linear-gradient(135deg, #13131f, #0d0d1a)" }}
+              <div className="absolute bottom-full left-0 right-0 mb-2 overflow-hidden rounded-xl border border-[#1a1a1a] shadow-2xl"
+                style={{ background: "#050505" }}
               >
-                <div className="flex items-center gap-3 border-b border-[#2a2a3e] px-4 py-3">
+                <div className="flex items-center gap-3 border-b border-[#1a1a1a] px-4 py-3">
                   {profile.avatar ? (
                     <img src={profile.avatar} alt={profile.name} referrerPolicy="no-referrer" className="h-10 w-10 rounded-full object-cover" />
                   ) : (
-                    <div className="gradient-bg flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white">
+                    <div className="gradient-bg flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-black">
                       {initials}
                     </div>
                   )}
                   <div className="min-w-0">
                     <div className="text-sm font-semibold truncate">{profile.name}</div>
-                    <div className="text-xs text-[#71717a] truncate">{profile.email}</div>
+                    <div className="text-xs text-[#555] truncate">{profile.email}</div>
                   </div>
                 </div>
 
-                <div className="px-4 py-2 border-b border-[#2a2a3e]">
-                  <div className="flex items-center gap-2 text-xs text-[#71717a]">
+                <div className="px-4 py-2 border-b border-[#1a1a1a]">
+                  <div className="flex items-center gap-2 text-xs text-[#555]">
                     <User className="h-3 w-3" />
                     <span>Signed in with Google</span>
                   </div>
@@ -168,7 +167,7 @@ export function Sidebar() {
 
                 <button
                   onClick={handleLogout}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-[#f43f5e] hover:bg-[#f43f5e]/10 transition-colors"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-[#ef4444] hover:bg-[#ef4444]/5 transition-colors"
                 >
                   <LogOut className="h-4 w-4" />
                   Sign out
@@ -178,7 +177,6 @@ export function Sidebar() {
           </div>
         )}
       </aside>
-
     </>
   );
 }

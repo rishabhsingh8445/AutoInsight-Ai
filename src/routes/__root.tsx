@@ -12,10 +12,10 @@ function NotFoundComponent() {
       <div className="glass-card max-w-md p-10 text-center">
         <h1 className="gradient-text text-7xl font-bold">404</h1>
         <h2 className="mt-4 text-xl font-semibold">Page not found</h2>
-        <p className="mt-2 text-sm text-[#71717a]">This page doesn't exist.</p>
+        <p className="mt-2 text-sm text-[#666]">This page doesn't exist.</p>
         <Link
           to="/"
-          className="btn-primary mt-6 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white"
+          className="btn-primary mt-6 inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium text-black"
         >
           Go home
         </Link>
@@ -70,15 +70,11 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: "#050508" }}>
+    <div className="noise-overlay relative min-h-screen overflow-hidden" style={{ backgroundColor: "#000000" }}>
       <div className="animated-background" aria-hidden="true">
         <span className="data-stream data-stream-1" />
-        <span className="data-stream data-stream-2" />
-        <span className="data-stream data-stream-3" />
-        <span className="signal-node signal-node-1" />
-        <span className="signal-node signal-node-2" />
-        <span className="signal-node signal-node-3" />
       </div>
+      <div className="perspective-grid" aria-hidden="true" />
       <Sidebar />
       <main className="relative z-10 ml-72 px-8 py-4">
         <Outlet />
