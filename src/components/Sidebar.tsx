@@ -1,0 +1,192 @@
+import { Link } from "@tanstack/react-router";
+import { Home, Upload, Table, BarChart3, MessageSquare, Sparkles, LogOut, LineChart, ChevronDown, User, Settings } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { useDataStore } from "@/store/dataStore";
+import { useEffect, useState, useRef } from "react";
+import { SettingsModal } from "./SettingsModal";
+
+const items = [
+  { to: "/", label: "Home", icon: Home },
+  { to: "/upload", label: "Upload", icon: Upload },
+  { to: "/tables", label: "Tables", icon: Table },
+  { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
+  { to: "/analytics", label: "Analytics", icon: LineChart },
+  { to: "/chat", label: "Chat", icon: MessageSquare },
+] as const;
+
+interface UserProfile {
+  name: string;
+  email: string;
+  avatar: string | null;
+}
+
+export function Sidebar() {
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const { clear } = useDataStore();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        const u = session.user;
+        setProfile({
+          name: u.user_metadata?.full_name ?? u.user_metadata?.name ?? "User",
+          email: u.email ?? "",
+          avatar: u.user_metadata?.avatar_url ?? u.user_metadata?.picture ?? null,
+        });
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (session?.user) {
+        const u = session.user;
+        setProfile({
+          name: u.user_metadata?.full_name ?? u.user_metadata?.name ?? "User",
+          email: u.email ?? "",
+          avatar: u.user_metadata?.avatar_url ?? u.user_metadata?.picture ?? null,
+        });
+      } else {
+        setProfile(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const handleLogout = async () => {
+    setMenuOpen(false);
+    clear(); // Wipe localStorage data on logout
+    await supabase.auth.signOut();
+    window.location.href = "/upload";
+  };
+
+  const initials = profile
+    ? profile.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2)
+    : "U";
+
+  return (
+    <>
+      <aside className="glass-card fixed top-4 bottom-4 left-4 z-30 flex w-60 flex-col p-4"
+        style={{ background: "linear-gradient(135deg, #13131f, #0d0d1a)", borderColor: "#2a2a3e" }}
+      >
+        {/* Logo with shimmer */}
+        <Link to="/" className="mb-8 flex items-center gap-2 px-2">
+          <div className="gradient-bg flex h-9 w-9 items-center justify-center rounded-lg shadow-[0_0_16px_-2px_rgba(99,102,241,0.5)]">
+            <Sparkles className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <div className="logo-shimmer text-sm font-semibold leading-none">AutoInsight</div>
+            <div className="gradient-text text-xs font-medium">AI</div>
+          </div>
+        </Link>
+
+        {/* Navigation */}
+        <nav className="flex flex-1 flex-col gap-1">
+          {items.map(({ to, label, icon: Icon }) => (
+            <Link
+              key={to}
+              to={to}
+              activeOptions={{ exact: to === "/" }}
+              activeProps={{ className: "sidebar-link-active" }}
+              inactiveProps={{ className: "text-[#71717a] hover:text-[#e8e8f0]" }}
+              className="sidebar-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all"
+            >
+              <Icon className="sidebar-icon h-4 w-4" />
+              {label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Settings button */}
+        <button
+          onClick={() => setSettingsOpen(true)}
+          className="sidebar-link flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#71717a] hover:text-[#e8e8f0] mb-2 transition-all"
+        >
+          <Settings className="h-4 w-4" />
+          Settings
+        </button>
+
+        {/* User profile */}
+        {profile && (
+          <div ref={menuRef} className="relative mt-2">
+            <button
+              onClick={() => setMenuOpen(v => !v)}
+              className="flex w-full items-center gap-3 rounded-xl border border-[#2a2a3e] bg-[#0d0d1a] px-3 py-2.5 transition-all hover:border-[#3a3a50] hover:bg-[#13131f]"
+            >
+              <div className="relative shrink-0">
+                {profile.avatar ? (
+                  <img
+                    src={profile.avatar}
+                    alt={profile.name}
+                    referrerPolicy="no-referrer"
+                    className="h-8 w-8 rounded-full object-cover ring-2 ring-[#6366f1]/40"
+                  />
+                ) : (
+                  <div className="gradient-bg flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white ring-2 ring-[#6366f1]/40">
+                    {initials}
+                  </div>
+                )}
+                <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-[#0d0d1a]" />
+              </div>
+
+              <div className="flex-1 min-w-0 text-left">
+                <div className="text-xs font-semibold truncate text-[#e8e8f0]">{profile.name}</div>
+                <div className="text-[10px] text-[#71717a] truncate">{profile.email}</div>
+              </div>
+
+              <ChevronDown className={`h-3 w-3 text-[#71717a] transition-transform shrink-0 ${menuOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            {menuOpen && (
+              <div className="absolute bottom-full left-0 right-0 mb-2 overflow-hidden rounded-xl border border-[#2a2a3e] shadow-xl"
+                style={{ background: "linear-gradient(135deg, #13131f, #0d0d1a)" }}
+              >
+                <div className="flex items-center gap-3 border-b border-[#2a2a3e] px-4 py-3">
+                  {profile.avatar ? (
+                    <img src={profile.avatar} alt={profile.name} referrerPolicy="no-referrer" className="h-10 w-10 rounded-full object-cover" />
+                  ) : (
+                    <div className="gradient-bg flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white">
+                      {initials}
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold truncate">{profile.name}</div>
+                    <div className="text-xs text-[#71717a] truncate">{profile.email}</div>
+                  </div>
+                </div>
+
+                <div className="px-4 py-2 border-b border-[#2a2a3e]">
+                  <div className="flex items-center gap-2 text-xs text-[#71717a]">
+                    <User className="h-3 w-3" />
+                    <span>Signed in with Google</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-[#f43f5e] hover:bg-[#f43f5e]/10 transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </aside>
+      <SettingsModal open={settingsOpen} onOpenChange={setSettingsOpen} />
+    </>
+  );
+}
