@@ -750,7 +750,7 @@ function AnalyticsPage() {
                     ))}
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1a1a2a" />
-                  <XAxis dataKey="name" tick={{ fill: "#52525b", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
+                  <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#52525b" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "…" : payload.value}</text>)} height={60} interval={0} />
                   <YAxis tick={{ fill: "#52525b", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} formatter={(value) => [value, "Count"]} labelFormatter={(label) => canDrillDown ? `${label} (click to drill down)` : label} />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]} animationDuration={800} animationBegin={0}>{chartData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} style={{ filter: `drop-shadow(0 0 8px ${COLORS[i % COLORS.length]}80)` }} />)}</Bar>
@@ -767,7 +767,7 @@ function AnalyticsPage() {
                     </filter>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1a1a2a" />
-                  <XAxis dataKey="name" tick={{ fill: "#52525b", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
+                  <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#52525b" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "…" : payload.value}</text>)} height={60} interval={0} />
                   <YAxis tick={{ fill: "#52525b", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                   <Area type="monotone" dataKey="value" stroke="#6366f1" strokeWidth={2.5} fill="url(#lineAreaGrad)" dot={false} style={{ filter: "url(#line-glow)" }} />
