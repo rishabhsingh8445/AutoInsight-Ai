@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState, useEffect } from "react";
 import { Send, MessageSquare, Sparkles } from "lucide-react";
-import { useDataStore, useSettingsStore } from "@/store/dataStore";
-import { MissingKeysBanner } from "@/components/MissingKeysBanner";
+import { useDataStore } from "@/store/dataStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -173,7 +172,7 @@ ${JSON.stringify(sampleRows)}`;
 
 function ChatPage() {
   const { columns, rows } = useDataStore();
-  const { groqKey } = useSettingsStore();
+  const groqKey = import.meta.env.VITE_GROQ_API_KEY || "";
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -185,12 +184,10 @@ function ChatPage() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
-  const missing = !groqKey ? ["Groq"] : [];
   const hasData = columns.length > 0 && rows.length > 0;
 
   const send = async () => {
     if (!input.trim() || loading) return;
-    if (!groqKey) { setError("Add your Groq API key in Settings."); return; }
     if (!hasData) { setError("Please upload a dataset first"); return; }
     setError(null);
     const userMsg: Msg = { role: "user", content: input.trim() };
@@ -243,9 +240,7 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
         <p className="text-sm text-[#71717a]">Ask questions about your data in plain English.</p>
       </div>
 
-      <div className="mt-6 page-enter page-enter-stagger-2">
-        <MissingKeysBanner missing={missing} />
-      </div>
+
 
       <div className="glass-card mt-2 flex flex-1 flex-col overflow-hidden page-enter page-enter-stagger-3">
         <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-6">

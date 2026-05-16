@@ -44,24 +44,3 @@ export const useDataStore = create<DataState>()(
   )
 );
 
-interface SettingsState {
-  groqKey: string;
-  setGroqKey: (groq: string) => void;
-}
-
-export const useSettingsStore = create<SettingsState>()(
-  persist(
-    (set) => ({
-      groqKey: import.meta.env.VITE_GROQ_API_KEY ?? "",
-      setGroqKey: (groq) => set({ groqKey: groq }),
-    }),
-    {
-      name: "autoinsight-settings",
-      merge: (persistedState: any, currentState: SettingsState) => ({
-        ...currentState,
-        ...persistedState,
-        groqKey: import.meta.env.VITE_GROQ_API_KEY || persistedState.groqKey || "",
-      }),
-    }
-  )
-);

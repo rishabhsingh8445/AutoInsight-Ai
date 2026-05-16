@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { BarChart3, Sparkles, Play, AlertCircle, Lightbulb, ListChecks, FileText, Download } from "lucide-react";
-import { useDataStore, useSettingsStore } from "@/store/dataStore";
-import { MissingKeysBanner } from "@/components/MissingKeysBanner";
+import { useDataStore } from "@/store/dataStore";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -122,16 +121,14 @@ function handleTiltLeave(e: React.MouseEvent<HTMLDivElement>) {
 
 function DashboardPage() {
   const { columns, rows, report } = useDataStore();
-  const { groqKey } = useSettingsStore();
+  const groqKey = import.meta.env.VITE_GROQ_API_KEY || "";
   const [loading, setLoading] = useState(false);
   const [sections, setSections] = useState<Sections | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const missing = !groqKey ? ["Groq"] : [];
   const hasData = columns.length > 0 && rows.length > 0;
 
   const run = async () => {
-    if (!groqKey) { setError("Add your Groq API key in Settings."); return; }
     if (!hasData) { setError("Upload a dataset first."); return; }
     setError(null); setLoading(true); setSections(null);
 
@@ -303,9 +300,7 @@ Sample rows (first 10 + last 5): ${JSON.stringify(sample)}`;
         </div>
       </div>
 
-      <div className="mt-6 page-enter page-enter-stagger-2">
-        <MissingKeysBanner missing={missing} />
-      </div>
+
 
       {error && (
         <div className="mb-4 rounded-lg border border-[#f43f5e]/40 bg-[#f43f5e]/10 px-4 py-3 text-sm text-[#f43f5e] page-enter page-enter-stagger-2">

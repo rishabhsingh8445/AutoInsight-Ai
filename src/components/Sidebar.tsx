@@ -1,9 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Home, Upload, Table, BarChart3, MessageSquare, Sparkles, LogOut, LineChart, ChevronDown, User, Settings } from "lucide-react";
+import { Home, Upload, Table, BarChart3, MessageSquare, Sparkles, LogOut, LineChart, ChevronDown, User } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useDataStore } from "@/store/dataStore";
 import { useEffect, useState, useRef } from "react";
-import { SettingsModal } from "./SettingsModal";
 
 const items = [
   { to: "/", label: "Home", icon: Home },
@@ -23,7 +22,7 @@ interface UserProfile {
 export function Sidebar() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
+
   const menuRef = useRef<HTMLDivElement>(null);
   const { clear } = useDataStore();
 
@@ -109,14 +108,7 @@ export function Sidebar() {
           ))}
         </nav>
 
-        {/* Settings button */}
-        <button
-          onClick={() => setSettingsOpen(true)}
-          className="sidebar-link flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#71717a] hover:text-[#e8e8f0] mb-2 transition-all"
-        >
-          <Settings className="h-4 w-4" />
-          Settings
-        </button>
+
 
         {/* User profile */}
         {profile && (
@@ -186,7 +178,7 @@ export function Sidebar() {
           </div>
         )}
       </aside>
-      <SettingsModal open={settingsOpen} onOpenChange={setSettingsOpen} />
+
     </>
   );
 }
