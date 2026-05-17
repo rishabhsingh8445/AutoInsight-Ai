@@ -247,8 +247,14 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
         <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-6">
           {messages.length === 0 && !loading && (
             <div className="flex h-full flex-col items-center justify-center text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl gradient-bg shadow-[0_0_40px_-8px_rgba(140,255,230,0.4)]">
-                <MessageSquare className="h-7 w-7 text-[#050508]" />
+              <div
+                className="flex h-16 w-16 items-center justify-center rounded-2xl"
+                style={{
+                  background: "linear-gradient(135deg, #8cffe6, #7da5ff)",
+                  boxShadow: "0 0 40px -8px rgba(140, 255, 230, 0.5)",
+                }}
+              >
+                <MessageSquare className="h-8 w-8 text-[#050508]" strokeWidth={2.25} />
               </div>
               <h2 className="mt-4 text-lg font-semibold text-foreground">
                 {hasData ? "Ask anything about your dataset" : "Please upload a dataset first"}

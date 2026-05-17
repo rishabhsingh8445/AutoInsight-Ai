@@ -79,7 +79,8 @@ export function Sidebar() {
           ))}
           <Link
             to="/chat"
-            className={`nav__pill${isActive("/chat") ? " nav__link--current" : ""}`}
+            className={`nav__link${isActive("/chat") ? " nav__link--current" : ""}`}
+            aria-current={isActive("/chat") ? "page" : undefined}
           >
             Chat
           </Link>

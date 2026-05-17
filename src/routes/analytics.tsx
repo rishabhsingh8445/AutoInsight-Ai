@@ -12,6 +12,49 @@ import {
   tooltipStyle, tooltipItemStyle,
 } from "@/lib/theme";
 import { Download, TrendingUp, Hash, BarChart2, Upload, Table2, ChevronRight, X, Bookmark, BookmarkCheck, Trash2, ImageDown } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const ALL_FILTER_VALUE = "__all__";
+
+const analyticsSelectTrigger =
+  "h-auto w-full rounded-lg border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white shadow-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 [&>svg]:text-muted-foreground";
+const analyticsSelectContent =
+  "z-[100] max-h-60 rounded-lg border-white/10 bg-[#12121a] text-white shadow-lg";
+const analyticsSelectItem =
+  "text-xs rounded-md py-2 pl-2 pr-8 cursor-pointer focus:bg-primary/15 focus:text-white data-[highlighted]:bg-primary/15 data-[highlighted]:text-white";
+
+function AnalyticsSelect({
+  value,
+  onValueChange,
+  options,
+  placeholder,
+}: {
+  value: string;
+  onValueChange: (value: string) => void;
+  options: { value: string; label: string }[];
+  placeholder?: string;
+}) {
+  return (
+    <Select value={value} onValueChange={onValueChange}>
+      <SelectTrigger className={analyticsSelectTrigger}>
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent className={analyticsSelectContent} position="popper">
+        {options.map((opt) => (
+          <SelectItem key={opt.value} value={opt.value} className={analyticsSelectItem}>
+            {opt.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
 
 export const Route = createFileRoute("/analytics")({
   component: AnalyticsPage,
@@ -81,7 +124,7 @@ function buildChartTitle(
   else if (chartType === "bar") title = activeY ? `${activeY} by ${activeX}` : `${activeX} Breakdown`;
   else title = `${activeX} Trend`;
   if (drillStack.length > 0) {
-    return { title, subtitle: `Drill: ${drillStack.map(d => `${d.col} = ${d.value}`).join(" → ")}` };
+    return { title, subtitle: `Drill: ${drillStack.map(d => `${d.col} = ${d.value}`).join(" â†’ ")}` };
   }
   let subtitle = "All data";
   if (activeFilters.length === 1) subtitle = `Filtered by ${activeFilters[0][0]} = ${activeFilters[0][1]}`;
@@ -125,7 +168,7 @@ const downloadChart = (id: string, name: string) => {
   img.src = url;
 };
 
-// HIGH QUALITY snapshot — draws chart SVG + metadata onto a branded canvas at 2x scale
+// HIGH QUALITY snapshot â€” draws chart SVG + metadata onto a branded canvas at 2x scale
 const downloadSnapshotImage = (
   snapshotName: string,
   chartTitle: string,
@@ -172,7 +215,7 @@ const downloadSnapshotImage = (
   // Logo / app name
   ctx.fillStyle = ACCENT;
   ctx.font = "bold 13px system-ui, sans-serif";
-  ctx.fillText("✦ AutoInsight AI", 32, 32);
+  ctx.fillText("âœ¦ AutoInsight AI", 32, 32);
 
   // Timestamp top right
   ctx.fillStyle = "rgba(148,163,184,0.6)";
@@ -189,7 +232,7 @@ const downloadSnapshotImage = (
   // Chart title + subtitle
   ctx.fillStyle = "rgba(148,163,184,0.9)";
   ctx.font = "14px system-ui, sans-serif";
-  ctx.fillText(`${chartTitle}  ·  ${chartSubtitle}`, 32, 92);
+  ctx.fillText(`${chartTitle}  Â·  ${chartSubtitle}`, 32, 92);
 
   // Divider
   ctx.strokeStyle = "rgba(255,255,255,0.08)";
@@ -230,7 +273,7 @@ const downloadSnapshotImage = (
 
   // Active filters display
   const activeFilters = Object.entries(filters).filter(([, v]) => Boolean(v));
-  const drillPath = drillStack.map(d => `${d.col}=${d.value}`).join(" → ");
+  const drillPath = drillStack.map(d => `${d.col}=${d.value}`).join(" â†’ ");
   const filterStr = [
     ...activeFilters.map(([k, v]) => `${k}: ${v}`),
     ...(drillPath ? [`Drill: ${drillPath}`] : [])
@@ -241,10 +284,10 @@ const downloadSnapshotImage = (
     ctx.fill();
     ctx.fillStyle = ACCENT;
     ctx.font = "11px system-ui, sans-serif";
-    ctx.fillText("⚡ " + filterStr, 42, 210);
+    ctx.fillText("âš¡ " + filterStr, 42, 210);
   }
 
-  // Chart area — get SVG from DOM and draw it
+  // Chart area â€” get SVG from DOM and draw it
   const chartAreaY = filterStr ? 230 : 200;
   const chartAreaH = H - chartAreaY - 60;
 
@@ -353,15 +396,15 @@ function drawFooterAndSave(
   ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(32, H - 44); ctx.lineTo(W - 32, H - 44); ctx.stroke();
 
-  // Footer left — data summary
+  // Footer left â€” data summary
   ctx.fillStyle = "rgba(148,163,184,0.5)";
   ctx.font = "10px system-ui, sans-serif";
   const summary = chartType !== "scatter"
-    ? `${chartData.length} categories  ·  Chart: ${chartType}`
-    : `${chartData.length} data points  ·  Chart: scatter`;
+    ? `${chartData.length} categories  Â·  Chart: ${chartType}`
+    : `${chartData.length} data points  Â·  Chart: scatter`;
   ctx.fillText(summary, 32, H - 26);
 
-  // Footer right — watermark
+  // Footer right â€” watermark
   ctx.textAlign = "right";
   ctx.fillStyle = "rgba(140, 255, 230, 0.45)";
   ctx.font = "10px system-ui, sans-serif";
@@ -603,8 +646,8 @@ function AnalyticsPage() {
                     <div className="text-xs font-semibold truncate">{bm.name}</div>
                     <div className="text-[10px] text-muted-foreground mt-0.5">{bm.createdAt}</div>
                     <div className="text-[10px] text-primary mt-1">
-                      {bm.chartType} · {bm.xCol}
-                      {Object.values(bm.filters).filter(Boolean).length > 0 && ` · ${Object.values(bm.filters).filter(Boolean).length} filter(s)`}
+                      {bm.chartType} Â· {bm.xCol}
+                      {Object.values(bm.filters).filter(Boolean).length > 0 && ` Â· ${Object.values(bm.filters).filter(Boolean).length} filter(s)`}
                     </div>
                   </div>
                   <div className="flex items-center gap-1 ml-2 shrink-0">
@@ -657,13 +700,19 @@ function AnalyticsPage() {
             {categoricalCols.slice(0, 6).map(col => (
               <div key={col}>
                 <label className="text-xs text-muted-foreground mb-1 block">{col}</label>
-                <select value={filters[col] ?? ""} onChange={e => setFilters(f => ({ ...f, [col]: e.target.value }))}
-                  className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white outline-none focus:border-primary/50">
-                  <option value="">All</option>
-                  {[...new Set(rows.map(r => String(r[col] ?? "")))].filter(Boolean).slice(0, 20).map(v => (
-                    <option key={v} value={v}>{v}</option>
-                  ))}
-                </select>
+                <AnalyticsSelect
+                  value={filters[col] || ALL_FILTER_VALUE}
+                  onValueChange={(v) =>
+                    setFilters((f) => ({ ...f, [col]: v === ALL_FILTER_VALUE ? "" : v }))
+                  }
+                  options={[
+                    { value: ALL_FILTER_VALUE, label: "All" },
+                    ...[...new Set(rows.map((r) => String(r[col] ?? "")))]
+                      .filter(Boolean)
+                      .slice(0, 20)
+                      .map((v) => ({ value: v, label: v })),
+                  ]}
+                />
               </div>
             ))}
             {Object.values(filters).some(Boolean) && (
@@ -678,7 +727,7 @@ function AnalyticsPage() {
               <div className="grid grid-cols-2 gap-1">
                 {(["line", "bar", "pie", "scatter"] as ChartType[]).map(t => (
                   <button key={t} onClick={() => { setChartType(t); setDrillStack([]); }}
-                    className={`rounded-lg px-2 py-1.5 text-xs font-medium capitalize transition-all ${chartType === t ? "gradient-bg text-[#050508] font-semibold" : "border border-white/10 text-muted-foreground hover:bg-white/5"}`}>
+                    className={`rounded-lg px-2 py-1.5 text-xs font-medium capitalize transition-all ${chartType === t ? "gradient-bg border-0 text-white font-semibold shadow-[0_0_14px_rgba(140,255,230,0.35)]" : "border border-white/10 text-muted-foreground hover:bg-white/5"}`}>
                     {t}
                   </button>
                 ))}
@@ -686,20 +735,25 @@ function AnalyticsPage() {
             </div>
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">X Axis</label>
-              <select value={activeX} onChange={e => { setXCol(e.target.value); setDrillStack([]); }}
-                className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white outline-none focus:border-primary/50">
-                {columns.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
+              <AnalyticsSelect
+                value={activeX}
+                onValueChange={(v) => {
+                  setXCol(v);
+                  setDrillStack([]);
+                }}
+                options={columns.map((c) => ({ value: c, label: c }))}
+              />
             </div>
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Y Axis</label>
-              <select value={activeY} onChange={e => setYCol(e.target.value)}
-                className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white outline-none focus:border-primary/50">
-                {columns.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
+              <AnalyticsSelect
+                value={activeY}
+                onValueChange={setYCol}
+                options={columns.map((c) => ({ value: c, label: c }))}
+              />
             </div>
             {canDrillDown && drillStack.length === 0 && (
-              <p className="text-[10px] text-primary mt-1">💡 Click a slice to drill down</p>
+              <p className="text-[10px] text-primary mt-1">ðŸ’¡ Click a slice to drill down</p>
             )}
           </div>
         </div>
@@ -755,7 +809,7 @@ function AnalyticsPage() {
                     </filter>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                  <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#aaa" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "…" : payload.value}</text>)} height={60} interval={0} />
+                  <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#aaa" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "â€¦" : payload.value}</text>)} height={60} interval={0} />
                   <YAxis tick={{ fill: "#aaa", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                   <Area type="monotone" dataKey="value" stroke={ACCENT} strokeWidth={2.5} fill="url(#lineAreaGrad)" dot={false} style={{ filter: "url(#line-glow)" }} />
@@ -772,7 +826,7 @@ function AnalyticsPage() {
                     </filter>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-                  <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#aaa" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "…" : payload.value}</text>)} height={60} interval={0} />
+                  <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#aaa" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "â€¦" : payload.value}</text>)} height={60} interval={0} />
                   <YAxis tick={{ fill: "#aaa", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} cursor={{ fill: "rgba(140,255,230,0.08)" }} />
                   <Bar dataKey="value" fill="url(#barGrad)" radius={[6, 6, 0, 0]} maxBarSize={48} style={{ filter: "url(#bar-glow)" }} />
@@ -834,48 +888,6 @@ function AnalyticsPage() {
             </div>
           )}
         </div>
-      </div>
-
-      <div className="mt-6 grid gap-6 md:grid-cols-3">
-        {categoricalCols.slice(0, 3).map((col, idx) => {
-          const data = (() => {
-            const counts: Record<string, number> = {};
-            filteredRows.forEach(r => { const v = String(r[col] ?? "Unknown"); counts[v] = (counts[v] ?? 0) + 1; });
-            return Object.entries(counts).slice(0, 6).map(([name, value]) => ({ name, value }));
-          })();
-          const activeFilterStr = [
-            ...Object.entries(filters).filter(([, v]) => Boolean(v)).map(([k, v]) => `${k}=${v}`),
-            ...drillStack.map(d => `${d.col}=${d.value}`)
-          ].join(", ");
-          return (
-            <div key={col} className="glass-card p-4" id={`secondary-chart-${idx}`}>
-              <div className="flex items-start justify-between mb-1">
-                <div>
-                  <h4 className="text-xs font-semibold uppercase text-foreground">{col} Distribution</h4>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">{activeFilterStr ? `Filtered: ${activeFilterStr}` : "All data"}</p>
-                </div>
-                <button onClick={() => downloadChart(`secondary-chart-${idx}`, `chart-${col}`)} className="text-xs text-muted-foreground hover:text-white">
-                  <Download className="h-3 w-3" />
-                </button>
-              </div>
-              <ResponsiveContainer width="100%" height={160}>
-                <AreaChart data={data}>
-                  <defs>
-                    <linearGradient id={`miniAreaGrad-${idx}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={CHART_COLORS[idx % CHART_COLORS.length]} stopOpacity={0.35} />
-                      <stop offset="100%" stopColor={CHART_COLORS[idx % CHART_COLORS.length]} stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                  <XAxis dataKey="name" tick={{ fill: "#aaa", fontSize: 9, fontFamily: "'JetBrains Mono', monospace" }} />
-                  <YAxis tick={{ fill: "#aaa", fontSize: 9, fontFamily: "'JetBrains Mono', monospace" }} />
-                  <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
-                  <Area type="monotone" dataKey="value" stroke={CHART_COLORS[idx % CHART_COLORS.length]} strokeWidth={2} fill={`url(#miniAreaGrad-${idx})`} dot={false} animationDuration={600} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          );
-        })}
       </div>
     </section>
   );

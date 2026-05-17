@@ -73,7 +73,7 @@ function RootComponent() {
         <Outlet />
       </main>
 
-      <footer className="wrap footer">
+      <footer className="wrap footer" style={{ position: "relative", zIndex: 2 }}>
         <div className="footer__left">
           <span className="muted">&copy; {new Date().getFullYear()} AutoInsight AI</span>
         </div>

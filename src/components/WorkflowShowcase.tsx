@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   FileSpreadsheet,
 } from "lucide-react";
+import { ACCENT } from "@/lib/theme";
 
 const STEPS = [
   {
@@ -135,22 +136,19 @@ function StageVisual({ stepId }: { stepId: (typeof STEPS)[number]["id"] }) {
             <svg className="workflow-visual__chartLine" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="workflowLineFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(var(--a), 0.45)" />
-                  <stop offset="100%" stopColor="rgba(var(--a), 0)" />
+                  <stop offset="0%" stopColor={ACCENT} stopOpacity={0.45} />
+                  <stop offset="100%" stopColor={ACCENT} stopOpacity={0} />
                 </linearGradient>
               </defs>
               <path className="workflow-visual__chartArea" d={areaPath} fill="url(#workflowLineFill)" />
-              <path className="workflow-visual__chartStroke" d={linePath} fill="none" />
-              {series.map((p, i) => (
-                <circle
-                  key={p.label}
-                  className="workflow-visual__chartDot"
-                  cx={toX(i)}
-                  cy={toY(p.value)}
-                  r="2.2"
-                  style={{ animationDelay: `${i * 0.08}s` }}
-                />
-              ))}
+              <path
+                className="workflow-visual__chartStroke"
+                d={linePath}
+                fill="none"
+                stroke={ACCENT}
+                strokeWidth={2}
+                vectorEffect="non-scaling-stroke"
+              />
             </svg>
             <div className="workflow-visual__chartXLabels" aria-hidden="true">
               {series.map((p) => (
