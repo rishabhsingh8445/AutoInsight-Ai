@@ -456,7 +456,7 @@
 
 /* ── Gradient Background (for icons) ── */
 .gradient-bg {
-  background: linear-gradient(135deg, #34d399, #22d3ee);
+  background: linear-gradient(135deg, rgba(var(--a), 1), rgba(var(--b), 1));
 }
 
 /* ── Primary Button (standalone) ── */
@@ -1246,5 +1246,5 @@ select option {
 }
 .upload-zone-cd:hover .upload-icon {
   transform: scale(1.05);
-  box-shadow: 0 0 50px -8px rgba(52,211,153,0.6);
+  box-shadow: 0 0 50px -8px rgba(var(--a), 0.55);
 }

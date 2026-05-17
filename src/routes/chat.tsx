@@ -247,7 +247,7 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
         <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-6">
           {messages.length === 0 && !loading && (
             <div className="flex h-full flex-col items-center justify-center text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl gradient-bg shadow-[0_0_40px_-8px_rgba(52,211,153,0.45)]">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl gradient-bg shadow-[0_0_40px_-8px_rgba(140,255,230,0.4)]">
                 <MessageSquare className="h-7 w-7 text-[#050508]" />
               </div>
               <h2 className="mt-4 text-lg font-semibold text-foreground">
@@ -258,7 +258,7 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
                   ? `${rows.length.toLocaleString()} rows · ${columns.length} columns ready to analyze.`
                   : "Head to Upload to add a CSV or Excel file."}
               </p>
-              <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
+              <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                 <Sparkles className="h-3 w-3" /> Powered by Groq
               </div>
             </div>
@@ -284,9 +284,9 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
           {loading && (
             <div className="flex justify-start">
               <div className="flex gap-1.5 rounded-2xl chat-assistant-bubble px-4 py-3">
-                <span className="h-2 w-2 animate-bounce rounded-full bg-[#10b981] [animation-delay:-0.3s]" />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-[#06b6d4] [animation-delay:-0.15s]" />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-[#a855f7]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:-0.3s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-[#7da5ff] [animation-delay:-0.15s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-[#ffaaf0]" />
               </div>
             </div>
           )}
@@ -310,7 +310,7 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
             }}
             placeholder={hasData ? "Ask about your data..." : "Upload a dataset to start chatting"}
             disabled={loading}
-            className="border-border bg-white/[0.04] text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-[#10b981]/20"
+            className="border-border bg-white/[0.04] text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-primary/20"
           />
           <Button onClick={send} disabled={loading || !input.trim()}
             className="btn-primary text-white border-0"

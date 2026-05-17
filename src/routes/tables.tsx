@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { useDataStore } from "@/store/dataStore";
 import { downloadCSV } from "@/lib/parseFile";
 import { Search, Download, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Upload } from "lucide-react";
+import { SCALE_HIGH, SCALE_MID, SCALE_LOW, ACCENT } from "@/lib/theme";
 
 export const Route = createFileRoute("/tables")({
   component: TablesPage,
@@ -36,9 +37,9 @@ function getCellInfo(value: unknown, stats: { min: number; max: number } | null)
   const num = Number(value);
   if (isNaN(num)) return { style: {} };
   const ratio = (num - stats.min) / (stats.max - stats.min);
-  if (ratio >= 0.75) return { style: { color: "#34d399" }, badge: "badge-high" };
-  if (ratio >= 0.45) return { style: { color: "#fbbf24" }, badge: "badge-mid" };
-  return { style: { color: "#f87171" }, badge: "badge-low" };
+  if (ratio >= 0.75) return { style: { color: SCALE_HIGH }, badge: "badge-high" };
+  if (ratio >= 0.45) return { style: { color: SCALE_MID }, badge: "badge-mid" };
+  return { style: { color: SCALE_LOW }, badge: "badge-low" };
 }
 
 function TablesPage() {
@@ -128,11 +129,11 @@ function TablesPage() {
             onClick={() => setConditionalFormat(f => !f)}
             className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-all ${
               conditionalFormat
-                ? "border-primary/30 bg-[#10b981]/10 text-[#818cf8]"
+                ? "border-primary/30 bg-primary/10 text-primary"
                 : "border-border text-muted-foreground hover:bg-white/[0.04]"
             }`}
           >
-            <span className="h-2 w-2 rounded-full" style={{ background: conditionalFormat ? "#10b981" : "#aaa" }} />
+            <span className="h-2 w-2 rounded-full" style={{ background: conditionalFormat ? ACCENT : "#aaa" }} />
             Conditional Format
           </button>
 
@@ -149,9 +150,9 @@ function TablesPage() {
       {conditionalFormat && numericCols.size > 0 && (
         <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground page-enter page-enter-stagger-2">
           <span>Numeric scale:</span>
-          <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full badge-low" style={{ background: "#f43f5e" }} /> Low</span>
-          <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full badge-mid" style={{ background: "#f59e0b" }} /> Mid</span>
-          <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full badge-high" style={{ background: "#10b981" }} /> High</span>
+          <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full badge-low" style={{ background: SCALE_LOW }} /> Low</span>
+          <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full badge-mid" style={{ background: SCALE_MID }} /> Mid</span>
+          <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full badge-high" style={{ background: SCALE_HIGH }} /> High</span>
         </div>
       )}
 
@@ -165,7 +166,7 @@ function TablesPage() {
                     <button onClick={() => toggleSort(c)} className="flex items-center gap-1.5 hover:text-primary whitespace-nowrap transition-colors">
                       {c}
                       {numericCols.has(c) && conditionalFormat && (
-                        <span className="ml-1 rounded px-1 py-0.5 text-[9px] font-mono" style={{ background: "rgba(16,185,129,0.15)", color: "#818cf8" }}>NUM</span>
+                        <span className="ml-1 rounded px-1 py-0.5 text-[9px] font-mono bg-primary/15 text-primary">NUM</span>
                       )}
                       {sortCol === c && (sortDir === "asc" ? <ArrowUp className="h-3 w-3 text-primary" /> : <ArrowDown className="h-3 w-3 text-primary" />)}
                     </button>
@@ -183,7 +184,7 @@ function TablesPage() {
                     return (
                       <td key={c} className="px-4 py-2.5 text-xs" style={info.style}>
                         {isNum ? (
-                          <span className="font-mono" style={{ color: conditionalFormat ? info.style.color : "#06b6d4" }}>
+                          <span className="font-mono" style={{ color: conditionalFormat ? info.style.color : ACCENT }}>
                             {String(val ?? "")}
                           </span>
                         ) : (

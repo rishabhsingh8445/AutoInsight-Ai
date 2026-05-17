@@ -48,8 +48,8 @@ function LoginGate() {
       >
         <div className="specular-highlight" />
         <div
-          className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl relative z-10"
-          style={{ background: "linear-gradient(135deg, #34d399, #22d3ee)", boxShadow: "0 0 40px -8px rgba(52,211,153,0.45)" }}
+          className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl relative z-10 gradient-bg"
+          style={{ boxShadow: "0 0 40px -8px rgba(140,255,230,0.4)" }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
@@ -267,8 +267,8 @@ function UploadPage() {
           className="hidden"
           onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileWithConfirm(f); }}
         />
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl upload-icon"
-          style={{ background: "linear-gradient(135deg, #34d399, #22d3ee)", boxShadow: "0 0 40px -8px rgba(52,211,153,0.45)" }}
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl upload-icon gradient-bg"
+          style={{ boxShadow: "0 0 40px -8px rgba(140,255,230,0.4)" }}
         >
           <UploadIcon className="h-8 w-8 text-white" />
         </div>
@@ -412,7 +412,7 @@ function UploadPage() {
 
 function Stat({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) {
   return (
-    <div className={`rounded-xl border border-border p-4 card-3d relative z-10 ${highlight ? "bg-emerald-500/10 border-emerald-500/20" : "bg-white/[0.02]"}`}
+    <div className={`rounded-xl border border-border p-4 card-3d relative z-10 ${highlight ? "bg-primary/10 border-primary/30" : "bg-white/[0.02]"}`}
       onMouseMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width;
@@ -422,7 +422,8 @@ function Stat({ label, value, highlight }: { label: string; value: number; highl
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'perspective(800px) rotateX(0) rotateY(0)'; }}
     >
       <div className="text-xs uppercase tracking-wider muted font-mono">{label}</div>
-      <div className={`mt-1 text-2xl font-bold font-mono ${highlight ? "text-primary" : "text-cyan-400"}`}>{value.toLocaleString()}</div>
+      <div className="mt-1 text-2xl font-bold font-mono text-primary">{value.toLocaleString()}</div>
     </div>
   );
 }
+

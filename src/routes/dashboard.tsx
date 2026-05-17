@@ -271,7 +271,7 @@ Sample rows (first 10 + last 5): ${JSON.stringify(sample)}`;
   };
 
   const cardMeta = sections ? [
-    { title: "Summary",         icon: FileText,    body: sections.summary,         color: "#34d399" },
+    { title: "Summary",         icon: FileText,    body: sections.summary,         color: "#8cffe6" },
     { title: "Key Insights",    icon: Lightbulb,   body: sections.insights,        color: "#22d3ee" },
     { title: "Anomalies",       icon: AlertCircle, body: sections.anomalies,       color: "#fbbf24" },
     { title: "Recommendations", icon: ListChecks,  body: sections.recommendations, color: "#a78bfa" },
