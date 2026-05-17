@@ -35,7 +35,7 @@ function LoginGate() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="glass-card card-3d w-full max-w-sm p-10 text-center"
+      <div className="about__card card-3d w-full max-w-sm p-10 text-center"
         onMouseMove={(e) => {
           const r = e.currentTarget.getBoundingClientRect();
           const x = (e.clientX - r.left) / r.width;
@@ -49,18 +49,18 @@ function LoginGate() {
         <div className="specular-highlight" />
         <div
           className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl relative z-10"
-          style={{ background: "linear-gradient(135deg, #10b981, #22d3ee)", boxShadow: "0 0 40px -8px rgba(16,185,129,0.5)" }}
+          style={{ background: "linear-gradient(135deg, #34d399, #22d3ee)", boxShadow: "0 0 40px -8px rgba(52,211,153,0.45)" }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
           </svg>
         </div>
-        <h1 className="text-2xl font-bold mb-1 text-[#1a1a1a] relative z-10">Login to Continue</h1>
-        <p className="text-sm text-[#888] mb-8 relative z-10">Sign in to upload and analyze your data</p>
+        <h1 className="text-2xl font-bold mb-1  relative z-10">Login to Continue</h1>
+        <p className="text-sm muted mb-8 relative z-10">Sign in to upload and analyze your data</p>
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="relative z-10 w-full flex items-center justify-center gap-3 rounded-lg border border-[#e8e6e1] bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all disabled:opacity-50"
+          className="relative z-10 w-full flex items-center justify-center gap-3 rounded-xl border border-border bg-white/[0.04] px-4 py-3 text-sm font-medium  hover:bg-white/[0.08] hover:border-primary/30 transition-all disabled:opacity-50"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -210,38 +210,41 @@ function UploadPage() {
 
   if (checkingAuth) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-[#888] text-sm">Loading...</div>
-      </div>
+      <section className="about page">
+        <p className="muted" style={{ textAlign: "center", padding: "4rem 0" }}>Loading...</p>
+      </section>
     );
   }
 
   if (!user) return <LoginGate />;
 
   return (
-    <div className="mx-auto max-w-3xl py-12">
-      <div className="page-enter page-enter-stagger-1 hero-spotlight">
-        <h1 className="text-4xl font-bold text-[#1a1a1a]">Upload <span className="gradient-text">data</span></h1>
-        <p className="mt-2 text-[#888]">CSV or Excel — we'll clean it and save it to your account.</p>
+    <section className="about page">
+      <div className="about__hero page__hero">
+        <div className="about__badge"><span>Upload</span></div>
+        <h1 className="about__title">
+          Import <span className="about__titleAccent">your data</span>
+        </h1>
+        <p className="about__lead">CSV or Excel — we&apos;ll clean it and save it to your account.</p>
       </div>
 
       {/* Existing data banner */}
       {hasExistingData && !report && (
-        <div className="glass-card mt-6 flex items-center justify-between gap-4 border-[#10b981]/20 px-5 py-4 page-enter page-enter-stagger-2">
+        <div className="about__card mt-6 flex items-center justify-between gap-4 border-primary/20 px-5 py-4">
           <div className="flex items-center gap-3 text-sm">
-            <FileSpreadsheet className="h-4 w-4 text-[#10b981] shrink-0" />
-            <span className="text-[#888]">
-              Dataset loaded: <span className="font-medium text-[#1a1a1a]">{columns.length} columns</span>
+            <FileSpreadsheet className="h-4 w-4 text-primary shrink-0" />
+            <span className="muted">
+              Dataset loaded: <span className="font-medium">{columns.length} columns</span>
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => navigate({ to: "/tables" })} className="text-xs text-[#10b981] hover:underline">
+            <button onClick={() => navigate({ to: "/tables" })} className="text-xs text-primary hover:underline">
               View data
             </button>
             <span className="text-[#e8e6e1]">·</span>
             <button
               onClick={() => { if (window.confirm("Clear existing dataset?")) clear(); }}
-              className="text-xs text-[#f43f5e] hover:text-[#fb7185]"
+              className="text-xs text-red-400 hover:text-[#fb7185]"
             >
               Clear
             </button>
@@ -255,7 +258,7 @@ function UploadPage() {
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         onClick={() => inputRef.current?.click()}
-        className={`upload-zone glass-card mt-8 cursor-pointer p-12 text-center rounded-2xl transition-all page-enter page-enter-stagger-3 ${dragging ? "dragging" : ""}`}
+        className={`upload-zone-cd mt-8 cursor-pointer p-12 text-center rounded-2xl transition-all ${dragging ? "upload-zone-cd--active" : ""}`}
       >
         <input
           ref={inputRef}
@@ -265,49 +268,49 @@ function UploadPage() {
           onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileWithConfirm(f); }}
         />
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl upload-icon"
-          style={{ background: "linear-gradient(135deg, #10b981, #22d3ee)", boxShadow: "0 0 40px -8px rgba(16,185,129,0.5)" }}
+          style={{ background: "linear-gradient(135deg, #34d399, #22d3ee)", boxShadow: "0 0 40px -8px rgba(52,211,153,0.45)" }}
         >
           <UploadIcon className="h-8 w-8 text-white" />
         </div>
-        <h3 className="mt-6 text-lg font-semibold text-[#1a1a1a]">
+        <h3 className="mt-6 text-lg font-semibold">
           {busy ? "Processing..." : "Drop your file here"}
         </h3>
-        <p className="mt-1 text-sm text-[#888]">or click to browse — .csv, .xlsx, .xls</p>
+        <p className="mt-1 text-sm muted">or click to browse — .csv, .xlsx, .xls</p>
       </div>
 
       {/* Cloud save status */}
       {cloudStatus === "saving" && (
-        <div className="mt-4 flex items-center gap-2 text-sm text-[#888]">
-          <RefreshCw className="h-3.5 w-3.5 animate-spin text-[#10b981]" /> Saving to cloud...
+        <div className="mt-4 flex items-center gap-2 text-sm muted">
+          <RefreshCw className="h-3.5 w-3.5 animate-spin text-primary" /> Saving to cloud...
         </div>
       )}
       {cloudStatus === "saved" && (
-        <div className="mt-4 flex items-center gap-2 text-sm text-[#10b981]">
+        <div className="mt-4 flex items-center gap-2 text-sm text-primary">
           <CheckCircle2 className="h-3.5 w-3.5" /> Saved to your account
         </div>
       )}
       {cloudStatus === "failed" && (
-        <div className="mt-4 flex items-center gap-2 text-sm text-[#f59e0b]">
+        <div className="mt-4 flex items-center gap-2 text-sm text-amber-400">
           <AlertCircle className="h-3.5 w-3.5" /> Cloud save failed — data available locally only
         </div>
       )}
 
       {/* Parse error */}
       {error && (
-        <div className="glass-card mt-6 flex items-start gap-3 border-[#f43f5e]/40 p-4 text-sm">
-          <AlertCircle className="mt-0.5 h-4 w-4 text-[#f43f5e]" />
-          <span className="text-[#1a1a1a]">{error}</span>
+        <div className="about__card mt-6 flex items-start gap-3 border-red-500/30 p-4 text-sm">
+          <AlertCircle className="mt-0.5 h-4 w-4 text-red-400" />
+          <span className="">{error}</span>
         </div>
       )}
 
       {/* Quality report */}
       {report && !busy && (
-        <div className="glass-card mt-6 p-6 page-enter page-enter-stagger-4">
+        <div className="about__card mt-6 p-6">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-[#10b981]" />
-            <h2 className="text-lg font-semibold text-[#1a1a1a]">Data Quality Report</h2>
+            <CheckCircle2 className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-semibold">Data Quality Report</h2>
           </div>
-          <p className="mt-1 flex items-center gap-2 text-sm text-[#888]">
+          <p className="mt-1 flex items-center gap-2 text-sm muted">
             <FileSpreadsheet className="h-4 w-4" /> {report.fileName}
           </p>
 
@@ -318,39 +321,39 @@ function UploadPage() {
             <Stat label="Issues fixed" value={report.emptyRowsRemoved + report.duplicatesRemoved} />
           </div>
 
-          <div className="mt-4 grid gap-2 text-sm text-[#888] md:grid-cols-2">
-            <div className="rounded-lg border border-[#e8e6e1] bg-white px-3 py-2">
-              Empty rows removed: <span className="font-mono text-[#06b6d4]">{report.emptyRowsRemoved}</span>
+          <div className="mt-4 grid gap-2 text-sm muted md:grid-cols-2">
+            <div className="rounded-lg border border-border bg-white/[0.04] px-3 py-2">
+              Empty rows removed: <span className="font-mono text-cyan-400">{report.emptyRowsRemoved}</span>
             </div>
-            <div className="rounded-lg border border-[#e8e6e1] bg-white px-3 py-2">
-              Duplicates removed: <span className="font-mono text-[#06b6d4]">{report.duplicatesRemoved}</span>
+            <div className="rounded-lg border border-border bg-white/[0.04] px-3 py-2">
+              Duplicates removed: <span className="font-mono text-cyan-400">{report.duplicatesRemoved}</span>
             </div>
           </div>
 
           <button
             onClick={() => navigate({ to: "/tables" })}
-            className="btn-primary mt-6 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white"
+            className="btn btn--primary mt-6 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white"
           >
             View data <ArrowRight className="h-4 w-4" />
           </button>
-          <Link to="/dashboard" className="ml-2 inline-flex items-center gap-2 rounded-lg border border-[#e8e6e1] px-5 py-2.5 text-sm font-medium text-[#888] hover:bg-[#f5f4f0] hover:text-[#555] transition-all">
+          <Link to="/dashboard" className="ml-2 btn btn--ghost">
             Open dashboard
           </Link>
         </div>
       )}
 
       {/* Dataset history */}
-      <div className="mt-10 page-enter page-enter-stagger-5">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-[#1a1a1a]">
-          <Clock className="h-4 w-4 text-[#10b981]" /> Your previous uploads
+      <div className="mt-10">
+        <h2 className="flex items-center gap-2 text-lg font-semibold">
+          <Clock className="h-4 w-4 text-primary" /> Your previous uploads
         </h2>
 
         {historyLoading && (
-          <div className="mt-4 text-sm text-[#888]">Loading history...</div>
+          <div className="mt-4 text-sm muted">Loading history...</div>
         )}
 
         {!historyLoading && history.length === 0 && (
-          <p className="mt-4 text-sm text-[#aaa]">
+          <p className="mt-4 text-sm muted">
             No uploads yet — your datasets will appear here after upload.
           </p>
         )}
@@ -358,20 +361,20 @@ function UploadPage() {
         {!historyLoading && history.length > 0 && (
           <div className="mt-4 space-y-3">
             {history.map(record => (
-              <div key={record.id} className="glass-card flex items-center justify-between gap-4 px-5 py-4 transition-all hover:border-[#ddd9d0]">
+              <div key={record.id} className="about__card flex items-center justify-between gap-4 px-5 py-4 transition-all hover:border-[#ddd9d0]">
                 <div className="flex items-center gap-3 min-w-0">
-                  <FileSpreadsheet className="h-4 w-4 text-[#10b981] shrink-0" />
+                  <FileSpreadsheet className="h-4 w-4 text-primary shrink-0" />
                   <div className="min-w-0">
-                    <div className="text-sm font-medium truncate text-[#1a1a1a]">{record.file_name}</div>
-                    <div className="text-xs text-[#888] mt-0.5 font-mono">
+                    <div className="text-sm font-medium truncate">{record.file_name}</div>
+                    <div className="text-xs muted mt-0.5 font-mono">
                       {record.row_count.toLocaleString()} rows · {record.column_count} columns · {new Date(record.uploaded_at).toLocaleDateString()}
                     </div>
                     <div className={`mt-1 text-[10px] font-medium font-mono ${
                       hoursUntilExpiry(record) <= 6
-                        ? "text-[#f43f5e]"
+                        ? "text-red-400"
                         : hoursUntilExpiry(record) <= 24
-                        ? "text-[#f59e0b]"
-                        : "text-[#aaa]"
+                        ? "text-amber-400"
+                        : "muted"
                     }`}>
                       ⏳ {hoursUntilExpiry(record) > 0
                         ? `Deletes in ${hoursUntilExpiry(record)}h`
@@ -383,7 +386,7 @@ function UploadPage() {
                   <button
                     onClick={() => handleLoadFromHistory(record)}
                     disabled={loadingId === record.id}
-                    className="btn-primary inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                    className="btn btn--primary inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                   >
                     {loadingId === record.id
                       ? <><RefreshCw className="h-3 w-3 animate-spin" /> Loading...</>
@@ -393,7 +396,7 @@ function UploadPage() {
                   <button
                     onClick={() => handleDelete(record)}
                     disabled={deletingId === record.id}
-                    className="rounded-lg border border-[#e8e6e1] p-1.5 text-[#888] hover:text-[#f43f5e] hover:border-[#f43f5e]/30 transition-all disabled:opacity-50"
+                    className="rounded-lg border border-border p-1.5 muted hover:text-red-400 hover:border-red-500/30 transition-all disabled:opacity-50"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
@@ -403,13 +406,13 @@ function UploadPage() {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }
 
 function Stat({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) {
   return (
-    <div className={`rounded-xl border border-[#e8e6e1] p-4 card-3d ${highlight ? "bg-[#10b981]/10" : "bg-white"}`}
+    <div className={`rounded-xl border border-border p-4 card-3d relative z-10 ${highlight ? "bg-emerald-500/10 border-emerald-500/20" : "bg-white/[0.02]"}`}
       onMouseMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width;
@@ -418,8 +421,8 @@ function Stat({ label, value, highlight }: { label: string; value: number; highl
       }}
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'perspective(800px) rotateX(0) rotateY(0)'; }}
     >
-      <div className="text-xs uppercase tracking-wider text-[#aaa] font-mono">{label}</div>
-      <div className={`mt-1 text-2xl font-bold font-mono ${highlight ? "text-[#10b981]" : "text-[#06b6d4]"}`}>{value.toLocaleString()}</div>
+      <div className="text-xs uppercase tracking-wider muted font-mono">{label}</div>
+      <div className={`mt-1 text-2xl font-bold font-mono ${highlight ? "text-primary" : "text-cyan-400"}`}>{value.toLocaleString()}</div>
     </div>
   );
 }

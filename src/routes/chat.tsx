@@ -64,7 +64,7 @@ function SafeMarkdown({ text, animate }: { text: string; animate?: boolean }) {
             parts.push(<strong key={key++}>{match[2]}</strong>);
           } else if (match[0].startsWith("`")) {
             parts.push(
-              <code key={key++} className="bg-[#f5f4f0] px-1.5 py-0.5 rounded text-xs font-mono text-[#06b6d4]">
+              <code key={key++} className="bg-white/[0.06] px-1.5 py-0.5 rounded text-xs font-mono text-cyan-400">
                 {match[4]}
               </code>
             );
@@ -88,7 +88,7 @@ function formatWord(word: string): React.ReactNode {
     return <strong>{word.slice(2, -2)}</strong>;
   }
   if (word.startsWith("`") && word.endsWith("`")) {
-    return <code className="bg-[#f5f4f0] px-1 rounded text-xs font-mono text-[#06b6d4]">{word.slice(1, -1)}</code>;
+    return <code className="bg-white/[0.06] px-1 rounded text-xs font-mono text-cyan-400">{word.slice(1, -1)}</code>;
   }
   return word;
 }
@@ -234,10 +234,11 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
   };
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col py-8">
-      <div className="page-enter page-enter-stagger-1 hero-spotlight">
-        <h1 className="text-3xl font-bold text-[#1a1a1a]">Chat</h1>
-        <p className="text-sm text-[#888]">Ask questions about your data in plain English.</p>
+    <section className="about page chat-layout">
+      <div className="page__hero about__hero page-enter">
+        <div className="about__badge"><span>Assistant</span></div>
+        <h1 className="about__title">Data <span className="about__titleAccent">chat</span></h1>
+        <p className="about__lead">Ask questions about your data in plain English.</p>
       </div>
 
 
@@ -246,20 +247,18 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
         <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-6">
           {messages.length === 0 && !loading && (
             <div className="flex h-full flex-col items-center justify-center text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl"
-                style={{ background: "linear-gradient(135deg, #10b981, #22d3ee)", boxShadow: "0 0 40px -8px rgba(16,185,129,0.5)" }}
-              >
-                <MessageSquare className="h-7 w-7 text-white" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl gradient-bg shadow-[0_0_40px_-8px_rgba(52,211,153,0.45)]">
+                <MessageSquare className="h-7 w-7 text-[#050508]" />
               </div>
-              <h2 className="mt-4 text-lg font-semibold text-[#1a1a1a]">
+              <h2 className="mt-4 text-lg font-semibold text-foreground">
                 {hasData ? "Ask anything about your dataset" : "Please upload a dataset first"}
               </h2>
-              <p className="mt-1 max-w-md text-sm text-[#888]">
+              <p className="mt-1 max-w-md text-sm text-muted-foreground">
                 {hasData
                   ? `${rows.length.toLocaleString()} rows · ${columns.length} columns ready to analyze.`
                   : "Head to Upload to add a CSV or Excel file."}
               </p>
-              <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#10b981]/30 bg-[#10b981]/10 px-3 py-1 text-xs font-medium text-[#818cf8]">
+              <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
                 <Sparkles className="h-3 w-3" /> Powered by Groq
               </div>
             </div>
@@ -270,10 +269,9 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
               <div
                 className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
                   m.role === "user"
-                    ? "chat-user-bubble border border-[#e8e6e1] text-[#1a1a1a]"
-                    : "border border-[#e8e6e1] text-[#1a1a1a]"
+                    ? "chat-user-bubble text-foreground"
+                    : "chat-assistant-bubble text-foreground/90"
                 }`}
-                style={m.role === "assistant" ? { background: "rgba(10, 10, 10, 0.8)" } : undefined}
               >
                 {m.role === "assistant"
                   ? <SafeMarkdown text={m.content} animate={i === latestAiIndex} />
@@ -285,7 +283,7 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
 
           {loading && (
             <div className="flex justify-start">
-              <div className="flex gap-1.5 rounded-2xl border border-[#e8e6e1] px-4 py-3" style={{ background: "rgba(10, 10, 10, 0.8)" }}>
+              <div className="flex gap-1.5 rounded-2xl chat-assistant-bubble px-4 py-3">
                 <span className="h-2 w-2 animate-bounce rounded-full bg-[#10b981] [animation-delay:-0.3s]" />
                 <span className="h-2 w-2 animate-bounce rounded-full bg-[#06b6d4] [animation-delay:-0.15s]" />
                 <span className="h-2 w-2 animate-bounce rounded-full bg-[#a855f7]" />
@@ -295,12 +293,12 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
         </div>
 
         {error && (
-          <div className="border-t border-[#f43f5e]/30 bg-[#f43f5e]/10 px-6 py-2 text-xs text-[#f43f5e]">
+          <div className="border-t border-red-500/30 bg-[#f43f5e]/10 px-6 py-2 text-xs text-red-400">
             {error}
           </div>
         )}
 
-        <div className="flex gap-2 border-t border-[#e8e6e1] p-4 chat-input-glow">
+        <div className="flex gap-2 border-t border-border p-4 chat-input-glow">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -312,7 +310,7 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
             }}
             placeholder={hasData ? "Ask about your data..." : "Upload a dataset to start chatting"}
             disabled={loading}
-            className="border-[#e8e6e1] bg-white text-[#1a1a1a] placeholder:text-[#aaa] focus:border-[#10b981] focus:ring-[#10b981]/20"
+            className="border-border bg-white/[0.04] text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-[#10b981]/20"
           />
           <Button onClick={send} disabled={loading || !input.trim()}
             className="btn-primary text-white border-0"
@@ -321,6 +319,6 @@ Use plain text formatting only — no markdown asterisks or symbols.`;
           </Button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -1,5 +1,6 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, redirect } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
+import { BackgroundParticles } from "@/components/BackgroundParticles";
 import { Sidebar } from "@/components/Sidebar";
 import { supabase } from "@/lib/supabase";
 
@@ -7,16 +8,16 @@ const PROTECTED = ["/dashboard", "/tables", "/analytics", "/chat"];
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="glass-card max-w-md p-10 text-center">
-        <h1 className="gradient-text text-7xl font-bold">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-[#1a1a1a]">Page not found</h2>
-        <p className="mt-2 text-sm text-[#888]">This page doesn't exist.</p>
-        <Link to="/" className="btn-primary mt-6 inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm">
-          Go home
-        </Link>
+    <section className="about page">
+      <div className="about__hero">
+        <div className="about__badge"><span>404</span></div>
+        <h1 className="about__title">Page <span className="about__titleAccent">not found</span></h1>
+        <p className="about__lead muted">This page doesn&apos;t exist.</p>
+        <div className="cta-row" style={{ marginTop: "1.5rem" }}>
+          <Link to="/" className="btn btn--primary">Go home</Link>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -27,13 +28,9 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "AutoInsight AI" },
       { name: "description", content: "AI-Powered Data Analysis" },
+      { name: "color-scheme", content: "dark light" },
     ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" },
-    ],
+    links: [{ rel: "stylesheet", href: appCss }],
   }),
   beforeLoad: async ({ location }) => {
     const isProtected = PROTECTED.some((p) => location.pathname.startsWith(p));
@@ -57,18 +54,33 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <div className="grain relative min-h-screen">
-      {/* Ambient floating blobs — visible on every page */}
-      <div className="ambient-blobs">
-        <div className="blob blob-1" />
-        <div className="blob blob-2" />
-        <div className="blob blob-3" />
+    <>
+      <div className="bg">
+        <div className="bg__mesh" aria-hidden="true" />
+        <div className="bg__noise" aria-hidden="true" />
+        <div className="bg__vignette" aria-hidden="true" />
+        <div className="bg__orbs" aria-hidden="true">
+          <div className="bg__orb bg__orb--1" />
+          <div className="bg__orb bg__orb--2" />
+          <div className="bg__orb bg__orb--3" />
+        </div>
       </div>
+      <BackgroundParticles />
 
       <Sidebar />
-      <main className="relative z-10 ml-[220px] min-h-screen px-10 py-8">
+
+      <main id="content" className="wrap" style={{ position: "relative", zIndex: 2 }}>
         <Outlet />
       </main>
-    </div>
+
+      <footer className="wrap footer">
+        <div className="footer__left">
+          <span className="muted">&copy; {new Date().getFullYear()} AutoInsight AI</span>
+        </div>
+        <div className="footer__right">
+          <span className="muted">Data intelligence platform</span>
+        </div>
+      </footer>
+    </>
   );
 }

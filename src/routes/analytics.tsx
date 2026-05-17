@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo, useRef } from "react";
 import { useDataStore } from "@/store/dataStore";
 import {
-  BarChart, Bar, PieChart, Pie, Cell,
+  PieChart, Pie, Cell,
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer, Area, AreaChart
 } from "recharts";
@@ -12,20 +12,20 @@ export const Route = createFileRoute("/analytics")({
   component: AnalyticsPage,
 });
 
-const COLORS = ["#10b981", "#06b6d4", "#f59e0b", "#10b981", "#f43f5e", "#a855f7"];
+const COLORS = ["#34d399", "#22d3ee", "#fbbf24", "#a78bfa", "#f87171", "#38bdf8"];
 
 const tooltipStyle = {
-  background: "rgba(5,5,8,0.96)",
-  border: "1px solid #e8e6e1",
-  borderRadius: 10,
-  color: "#1a1a1a",
+  background: "rgba(8, 8, 14, 0.96)",
+  border: "1px solid rgba(255,255,255,0.1)",
+  borderRadius: 12,
+  color: "#ededed",
   fontSize: 12,
   fontFamily: "'JetBrains Mono', monospace",
-  boxShadow: "0 8px 32px -8px rgba(0,0,0,0.6)",
+  boxShadow: "0 12px 40px -12px rgba(0,0,0,0.8)",
 };
-const tooltipItemStyle = { color: "#06b6d4" };
+const tooltipItemStyle = { color: "#22d3ee" };
 
-type ChartType = "bar" | "line" | "pie" | "scatter";
+type ChartType = "line" | "pie" | "scatter";
 
 interface DrillState {
   col: string;
@@ -86,8 +86,7 @@ function buildChartTitle(
   let title = "";
   if (chartType === "scatter") title = `${activeX} vs ${activeY}`;
   else if (chartType === "pie") title = `${activeX} Distribution`;
-  else if (chartType === "line") title = `${activeX} Trend`;
-  else title = `${activeX} by Count`;
+  else title = `${activeX} Trend`;
   if (drillStack.length > 0) {
     return { title, subtitle: `Drill: ${drillStack.map(d => `${d.col} = ${d.value}`).join(" → ")}` };
   }
@@ -320,22 +319,31 @@ function drawChartFallback(
   chartType: ChartType,
   x: number, y: number, w: number, h: number
 ) {
-  if (chartType === "scatter" || chartData.length === 0) return;
+  if (chartType === "scatter" || chartType === "pie" || chartData.length === 0) return;
   const maxVal = Math.max(...chartData.map(d => d.value ?? 0));
-  const barW = Math.min(60, (w - 40) / chartData.length - 8);
-  const barAreaH = h - 40;
-  chartData.slice(0, 15).forEach((d, i) => {
-    const barH = maxVal > 0 ? ((d.value ?? 0) / maxVal) * barAreaH : 0;
-    const bx = x + 20 + i * (barW + 8);
-    const by = y + barAreaH - barH;
-    const color = COLORS[i % COLORS.length];
-    ctx.fillStyle = color;
-    roundRect(ctx, bx, by, barW, barH, 4);
+  const plotH = h - 40;
+  const plotW = w - 40;
+  const points = chartData.slice(0, 15).map((d, i) => ({
+    x: x + 20 + (i / Math.max(chartData.length - 1, 1)) * plotW,
+    y: y + plotH - (maxVal > 0 ? ((d.value ?? 0) / maxVal) * plotH : 0),
+    label: String(d.name ?? "").slice(0, 8),
+  }));
+  ctx.strokeStyle = "#10b981";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  points.forEach((p, i) => {
+    if (i === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  });
+  ctx.stroke();
+  points.forEach((p, i) => {
+    ctx.fillStyle = COLORS[i % COLORS.length];
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "rgba(148,163,184,0.7)";
     ctx.font = "9px system-ui, sans-serif";
-    const label = String(d.name ?? "").slice(0, 8);
-    ctx.fillText(label, bx, y + barAreaH + 14);
+    ctx.fillText(p.label, p.x - 12, y + plotH + 14);
   });
 }
 
@@ -384,7 +392,7 @@ function drawFooterAndSave(
 function AnalyticsPage() {
   const { columns, rows } = useDataStore();
   const [filters, setFilters] = useState<Record<string, string>>({});
-  const [chartType, setChartType] = useState<ChartType>("bar");
+  const [chartType, setChartType] = useState<ChartType>("line");
   const [xCol, setXCol] = useState<string>("");
   const [yCol, setYCol] = useState<string>("");
   const [showDataTable, setShowDataTable] = useState(false);
@@ -486,7 +494,8 @@ function AnalyticsPage() {
   };
 
   const loadBookmark = (bm: BookmarkSnapshot) => {
-    setFilters(bm.filters); setChartType(bm.chartType);
+    setFilters(bm.filters);
+    setChartType((bm.chartType as string) === "bar" ? "line" : bm.chartType);
     setXCol(bm.xCol); setYCol(bm.yCol); setDrillStack(bm.drillStack);
     setShowBookmarks(false);
   };
@@ -520,14 +529,14 @@ function AnalyticsPage() {
     }, 100);
   };
 
-  const canDrillDown = (chartType === "bar" || chartType === "pie") && nextDrillCol !== null;
+  const canDrillDown = chartType === "pie" && nextDrillCol !== null;
 
   if (!columns.length) {
     return (
       <div className="mx-auto max-w-2xl py-20 text-center page-enter page-enter-stagger-1">
         <div className="glass-card p-12">
-          <h2 className="text-2xl font-bold text-[#1a1a1a]">No data yet</h2>
-          <p className="mt-2 text-[#888]">Upload a file to see analytics.</p>
+          <h2 className="text-2xl font-bold text-foreground">No data yet</h2>
+          <p className="mt-2 text-muted-foreground">Upload a file to see analytics.</p>
           <Link to="/upload" className="btn-primary mt-6 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white">
             <Upload className="h-4 w-4" /> Upload data
           </Link>
@@ -537,11 +546,12 @@ function AnalyticsPage() {
   }
 
   return (
-    <div className="py-8">
+    <section className="about page">
       <div className="flex items-center justify-between mb-6 page-enter page-enter-stagger-1">
-        <div className="hero-spotlight">
-          <h1 className="text-3xl font-bold text-[#1a1a1a]">Analytics</h1>
-          <p className="text-sm text-[#888]">Interactive data exploration</p>
+        <div className="page__hero about__hero" style={{ flex: "1 1 auto" }}>
+          <div className="about__badge"><span>Explore</span></div>
+          <h1 className="about__title">Data <span className="about__titleAccent">analytics</span></h1>
+          <p className="about__lead">Interactive data exploration</p>
         </div>
         <div className="flex items-center gap-2">
           {/* Download current view as high-res snapshot */}
@@ -562,7 +572,7 @@ function AnalyticsPage() {
                 onChange={e => setBookmarkName(e.target.value)}
                 onKeyDown={e => { if (e.key === "Enter") saveBookmark(); if (e.key === "Escape") setShowNameInput(false); }}
                 placeholder="Snapshot name..."
-                className="rounded-lg border border-white/10 bg-[#f5f4f0] px-3 py-1.5 text-xs text-white outline-none focus:border-purple-500 w-40"
+                className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white outline-none focus:border-purple-500 w-40"
               />
               <button onClick={saveBookmark} className="gradient-bg rounded-lg px-3 py-1.5 text-xs font-medium text-white">Save</button>
               <button onClick={() => setShowNameInput(false)} className="text-xs text-muted-foreground hover:text-white">Cancel</button>
@@ -595,7 +605,7 @@ function AnalyticsPage() {
           ) : (
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {bookmarks.map(bm => (
-                <div key={bm.id} className="flex items-start justify-between rounded-lg border border-white/10 bg-white/5 p-3">
+                <div key={bm.id} className="flex items-start justify-between rounded-lg border border-white/10 bg-white/[0.04]/5 p-3">
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-semibold truncate">{bm.name}</div>
                     <div className="text-[10px] text-muted-foreground mt-0.5">{bm.createdAt}</div>
@@ -640,7 +650,7 @@ function AnalyticsPage() {
               onMouseLeave={(e) => { e.currentTarget.style.transform = 'perspective(800px) rotateX(0) rotateY(0)'; }}
             >
               <div className="specular-highlight" />
-              <div className="text-xs text-[#aaa] uppercase tracking-wider mb-1 font-mono relative z-10">{kpi.label}</div>
+              <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1 font-mono relative z-10">{kpi.label}</div>
               <div className="text-2xl font-bold font-mono relative z-10" style={{ color: kpi.color }}>{kpi.value}</div>
             </div>
           ))}
@@ -655,7 +665,7 @@ function AnalyticsPage() {
               <div key={col}>
                 <label className="text-xs text-muted-foreground mb-1 block">{col}</label>
                 <select value={filters[col] ?? ""} onChange={e => setFilters(f => ({ ...f, [col]: e.target.value }))}
-                  className="w-full rounded-lg border border-white/10 bg-[#f5f4f0] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
+                  className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
                   <option value="">All</option>
                   {[...new Set(rows.map(r => String(r[col] ?? "")))].filter(Boolean).slice(0, 20).map(v => (
                     <option key={v} value={v}>{v}</option>
@@ -673,7 +683,7 @@ function AnalyticsPage() {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Chart Type</label>
               <div className="grid grid-cols-2 gap-1">
-                {(["bar", "line", "pie", "scatter"] as ChartType[]).map(t => (
+                {(["line", "pie", "scatter"] as ChartType[]).map(t => (
                   <button key={t} onClick={() => { setChartType(t); setDrillStack([]); }}
                     className={`rounded-lg px-2 py-1.5 text-xs font-medium capitalize transition-all ${chartType === t ? "gradient-bg text-white" : "border border-white/10 text-muted-foreground hover:bg-white/5"}`}>
                     {t}
@@ -684,19 +694,19 @@ function AnalyticsPage() {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">X Axis</label>
               <select value={activeX} onChange={e => { setXCol(e.target.value); setDrillStack([]); }}
-                className="w-full rounded-lg border border-white/10 bg-[#f5f4f0] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
+                className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
                 {columns.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Y Axis</label>
               <select value={activeY} onChange={e => setYCol(e.target.value)}
-                className="w-full rounded-lg border border-white/10 bg-[#f5f4f0] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
+                className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
                 {columns.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             {canDrillDown && drillStack.length === 0 && (
-              <p className="text-[10px] text-purple-400 mt-1">💡 Click a bar/slice to drill down</p>
+              <p className="text-[10px] text-purple-400 mt-1">💡 Click a slice to drill down</p>
             )}
           </div>
         </div>
@@ -740,22 +750,7 @@ function AnalyticsPage() {
 
           <div id="main-chart">
             <ResponsiveContainer width="100%" height={showDataTable ? 420 : 620}>
-              {chartType === "bar" ? (
-                <BarChart data={chartData} onClick={canDrillDown ? handleDrillDown : undefined} style={canDrillDown ? { cursor: "pointer" } : {}}>
-                  <defs>
-                    {COLORS.map((c, i) => (
-                      <filter key={`glow-${i}`} id={`bar-glow-${i}`}>
-                        <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor={c} floodOpacity="0.5" />
-                      </filter>
-                    ))}
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f5f4f0" />
-                  <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#aaa" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "…" : payload.value}</text>)} height={60} interval={0} />
-                  <YAxis tick={{ fill: "#aaa", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
-                  <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} formatter={(value) => [value, "Count"]} labelFormatter={(label) => canDrillDown ? `${label} (click to drill down)` : label} />
-                  <Bar dataKey="value" radius={[6, 6, 0, 0]} animationDuration={800} animationBegin={0}>{chartData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} style={{ filter: `drop-shadow(0 0 8px ${COLORS[i % COLORS.length]}80)` }} />)}</Bar>
-                </BarChart>
-              ) : chartType === "line" ? (
+              {chartType === "line" ? (
                 <AreaChart data={chartData}>
                   <defs>
                     <linearGradient id="lineAreaGrad" x1="0" y1="0" x2="0" y2="1">
@@ -766,7 +761,7 @@ function AnalyticsPage() {
                       <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#10b981" floodOpacity="0.6" />
                     </filter>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f5f4f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                   <XAxis dataKey="name" tick={({ x, y, payload }) => (<text x={x} y={y + 8} textAnchor="end" transform={`rotate(-35, ${x}, ${y + 8})`} fill="#aaa" fontSize={10} fontFamily="'JetBrains Mono', monospace">{String(payload.value).length > 12 ? String(payload.value).slice(0, 12) + "…" : payload.value}</text>)} height={60} interval={0} />
                   <YAxis tick={{ fill: "#aaa", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
@@ -792,7 +787,7 @@ function AnalyticsPage() {
                 </PieChart>
               ) : (
                 <ScatterChart>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f5f4f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                   <XAxis dataKey="x" name={activeX} tick={{ fill: "#aaa", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
                   <YAxis dataKey="y" name={activeY} tick={{ fill: "#aaa", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} />
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} cursor={{ strokeDasharray: "3 3" }} />
@@ -806,7 +801,7 @@ function AnalyticsPage() {
             <div className="mt-3 overflow-hidden rounded-lg border border-white/10">
               <div className="overflow-x-auto max-h-52 overflow-y-auto">
                 <table className="w-full text-xs">
-                  <thead className="sticky top-0 bg-white">
+                  <thead className="sticky top-0 bg-white/[0.04]">
                     <tr>
                       {chartType === "scatter"
                         ? [activeX, activeY].map(h => <th key={h} className="border-b border-white/10 px-3 py-2 text-left font-semibold text-muted-foreground">{h}</th>)
@@ -854,20 +849,24 @@ function AnalyticsPage() {
                 </button>
               </div>
               <ResponsiveContainer width="100%" height={160}>
-                <BarChart data={data} barSize={20}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f5f4f0" />
+                <AreaChart data={data}>
+                  <defs>
+                    <linearGradient id={`miniAreaGrad-${idx}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={COLORS[idx % COLORS.length]} stopOpacity={0.35} />
+                      <stop offset="100%" stopColor={COLORS[idx % COLORS.length]} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                   <XAxis dataKey="name" tick={{ fill: "#aaa", fontSize: 9, fontFamily: "'JetBrains Mono', monospace" }} />
                   <YAxis tick={{ fill: "#aaa", fontSize: 9, fontFamily: "'JetBrains Mono', monospace" }} />
                   <Tooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
-                  <Bar dataKey="value" radius={[4, 4, 0, 0]} animationDuration={600}>
-                    {data.map((_, i) => <Cell key={i} fill={COLORS[(idx + i) % COLORS.length]} />)}
-                  </Bar>
-                </BarChart>
+                  <Area type="monotone" dataKey="value" stroke={COLORS[idx % COLORS.length]} strokeWidth={2} fill={`url(#miniAreaGrad-${idx})`} dot={false} animationDuration={600} />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }
