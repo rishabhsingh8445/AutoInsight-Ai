@@ -1,74 +1,56 @@
-# AutoInsight AI 🚀
-### AI-Powered Data Analysis Platform (Power BI + ChatGPT Inspired)
-
-AutoInsight AI is an advanced data analysis platform that transforms raw, unstructured datasets into clean, interactive, and insight-rich dashboards — without writing a single line of code.
-
-It combines **data cleaning, visualization, AI insights, and conversational analytics** into one unified interface.
+<div align="center">
+  <h1>🚀 AutoInsight AI</h1>
+  <p><strong>AI-Powered Data Analysis Platform (Power BI + ChatGPT Inspired)</strong></p>
+  <p>
+    <a href="https://autoinsight-ai.rs01.workers.dev/"><b>Live Demo</b></a> •
+    <a href="#-core-features"><b>Features</b></a> •
+    <a href="#️-tech-stack"><b>Tech Stack</b></a> •
+    <a href="#-project-structure"><b>Structure</b></a>
+  </p>
+</div>
 
 ---
 
-## 🌐 Live Demo
+AutoInsight AI is an advanced, visually stunning data analysis platform that transforms raw, unstructured datasets into clean, interactive, and insight-rich dashboards — without writing a single line of code.
 
-👉 https://autoinsight-ai.rs01.workers.dev/
+It features a **cinematic dark tech UI** and combines **data cleaning, visualization, AI insights, and conversational analytics** into one unified, seamless interface.
 
 ---
 
 ## ⚡ Core Features
 
 ### 📂 Smart Data Processing
-- Upload CSV / Excel files
-- Automatically cleans unformatted datasets
-- Handles missing values, duplicates, inconsistencies
-- **Cloud storage** — files saved to your account via Supabase Storage
-- **Dataset history** — previous uploads accessible across devices and sessions
-- **Auto-expiry** — uploaded files are automatically deleted after 48 hours. A secure API route (`/api/cron`) triggered by an external cron service (e.g., cron-job.org) wipes expired data globally, with a client-side fallback for logged-in users.
-
----
+* **Multi-format Support:** Upload CSV / Excel files.
+* **Auto-Cleaning:** Automatically cleans unformatted datasets, handling missing values, duplicates, and inconsistencies.
+* **Cloud Storage:** Files are securely saved to your account via Supabase Storage.
+* **Dataset History:** Previous uploads are accessible across devices and sessions.
+* **Auto-Expiry:** Uploaded files are automatically deleted after 48 hours for data hygiene. A secure API route (`/api/cron`) triggered by an external service (e.g., cron-job.org) handles global cleanup, with a client-side fallback.
 
 ### 📊 Power BI–Style Tables
-- Conditional formatting (Low / Mid / High color coding)
-- Structured tabular data view
-- Sort, search, and filter across all columns
-- Download dataset as formatted Excel file
-
----
+* **Conditional Formatting:** Low / Mid / High color coding for instant visual data comprehension.
+* **Interactive Grid:** Structured tabular data view with sort, search, and filter capabilities across all columns.
+* **Export:** Download your cleaned and formatted dataset as an Excel file.
 
 ### 📈 Interactive Analytics Engine
-- Multi-column filtering
-- Dynamic charts (Bar, Line, Pie, Scatter)
-- Real-time aggregation (Sum, Avg, Min, Max)
-- Custom X/Y axis selection
-- Drill-down with bookmark snapshots
-
----
+* **Dynamic Charts:** Support for Bar, Line, Pie, and Scatter charts powered by Recharts.
+* **Custom Configurations:** Custom X/Y axis selection and real-time aggregation (Sum, Avg, Min, Max).
+* **Advanced Filtering:** Multi-column filtering to slice and dice your data.
+* **Drill-down:** Capture insights with bookmark snapshots.
 
 ### 🤖 AI Dashboard Insights
-- Auto-generated dataset summary
-- Key insights extraction computed over the **full dataset** (not a sample)
-- Anomaly detection
-- Actionable recommendations
-- Export insights as PDF report
-
----
+* **Deep Analysis:** Auto-generated dataset summaries and key insights extraction computed over the **full dataset** (not just a sample).
+* **Intelligence:** Built-in anomaly detection and actionable recommendations.
+* **Reporting:** Export comprehensive AI insights as a branded PDF report.
 
 ### 💬 Chat with Data (AI Assistant)
-- Ask questions in plain English
-- Full column-level statistics sent as context — accurate answers across 10,000+ row datasets
-- Powered by Groq (Llama 3.3 70B)
-
----
+* **Conversational Interface:** Ask questions about your data in plain English.
+* **High Accuracy:** Full column-level statistics are sent as context, ensuring accurate answers even across 10,000+ row datasets.
+* **Powered by Groq:** Utilizing the lightning-fast Llama 3.3 70B model.
 
 ### 🔐 Authentication & Data Security
-- Google OAuth via Supabase Auth
-- Route-level auth guards — all pages protected
-- Per-user data isolation (Row Level Security)
-- Logout clears local session data instantly
-
----
-
-### 📄 Export System
-- Download cleaned dataset as Excel with conditional formatting
-- Export AI insights as branded PDF
+* **Seamless Login:** Google OAuth powered by Supabase Auth.
+* **Secure Navigation:** Route-level auth guards protect all application pages.
+* **Data Isolation:** Per-user data isolation utilizing Row Level Security (RLS) in PostgreSQL.
 
 ---
 
@@ -76,39 +58,62 @@ It combines **data cleaning, visualization, AI insights, and conversational anal
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | React + Vite + TypeScript |
-| Routing | TanStack Router (SSR-capable) |
-| State | Zustand + localStorage persistence |
-| Backend / Auth | Supabase (PostgreSQL + Auth + Storage) |
-| AI | Groq API — Llama 3.3 70B |
-| Charts | Recharts |
-| Deployment | Cloudflare Pages |
+| **Frontend** | React 19 + Vite + TypeScript |
+| **Styling** | Tailwind CSS v4 + Radix UI + Custom Cinematic CSS Animations |
+| **Routing** | TanStack Router (SSR-capable) |
+| **State Management**| Zustand + localStorage persistence |
+| **Backend / Auth** | Supabase (PostgreSQL + Auth + Storage) |
+| **AI Engine** | Groq API — Llama 3.3 70B |
+| **Visualization** | Recharts |
+| **Data Parsing** | PapaParse, SheetJS (xlsx), ExcelJS |
+| **Deployment** | Cloudflare Pages |
 
 ---
 
 ## 📁 Project Structure
 
-```
-project-root/
+```text
+AutoInsight-Ai/
 ├── src/
-│   ├── components/       # Sidebar, MissingKeysBanner, UI primitives
-│   ├── lib/              # parseFile.ts, supabase.ts
-│   ├── routes/           # upload, tables, dashboard, analytics, chat
-│   ├── store/            # dataStore.ts, settingsStore
-│   ├── router.tsx
-│   └── styles.css
-├── public/
-├── package.json
-└── vite.config.ts
+│   ├── components/       # Reusable React components
+│   │   ├── ui/           # Radix UI primitives & generic design components
+│   │   ├── Sidebar.tsx   # Main application navigation sidebar
+│   │   ├── WorkflowShowcase.tsx # Landing page workflow animation
+│   │   └── BackgroundParticles.tsx # Cinematic background effect
+│   ├── lib/              # Core utilities and configuration
+│   │   ├── parseFile.ts  # CSV/Excel parsing logic (PapaParse, SheetJS)
+│   │   ├── supabase.ts   # Supabase client configuration
+│   │   ├── theme.ts      # Theming utilities
+│   │   └── utils.ts      # Helper functions (Tailwind merge, clsx, etc.)
+│   ├── routes/           # TanStack Router page components
+│   │   ├── api/          # API routes (e.g., cron jobs)
+│   │   ├── index.tsx     # Landing page
+│   │   ├── upload.tsx    # Data upload interface
+│   │   ├── tables.tsx    # Data grid view
+│   │   ├── analytics.tsx # Charts and AI insights
+│   │   ├── dashboard.tsx # Main dashboard overview
+│   │   └── chat.tsx      # Conversational AI interface
+│   ├── store/            # Global state management
+│   │   └── dataStore.ts  # Zustand store for dataset state
+│   ├── hooks/            # Custom React hooks
+│   │   └── use-mobile.tsx # Responsive utility hook
+│   ├── router.tsx        # TanStack Router configuration
+│   ├── routeTree.gen.ts  # Auto-generated route definitions
+│   └── styles.css        # Global CSS, Tailwind config, & Custom Cinematic Styling
+├── public/               # Static assets
+├── package.json          # Project dependencies and scripts
+├── vite.config.ts        # Vite build configuration
+├── eslint.config.js      # ESLint configuration
+└── wrangler.jsonc        # Cloudflare Workers configuration
 ```
 
 ---
 
 ## ⚙️ Environment Variables
 
-Create a `.env` file:
+Create a `.env` file in the root directory:
 
-```
+```env
 VITE_GROQ_API_KEY=your_groq_api_key
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -120,7 +125,7 @@ VITE_CRON_SECRET=your_secret_cron_password
 
 ## 🗄️ Supabase Setup
 
-### 1. Create the datasets table
+### 1. Create the `datasets` table
 
 ```sql
 create table datasets (
@@ -142,9 +147,9 @@ create policy "Users see own datasets"
   using (auth.uid() = user_id);
 ```
 
-### 2. Create the storage bucket
+### 2. Configure Storage Bucket
 
-Create a private bucket named `datasets` in Supabase Storage, then add policies:
+Create a private bucket named `datasets` in Supabase Storage, then apply the following policies:
 
 ```sql
 create policy "Users can upload own files"
@@ -164,66 +169,57 @@ using (bucket_id = 'datasets' AND (storage.foldername(name))[1] = auth.uid()::te
 
 ## 💻 Local Development
 
-```bash
-git clone https://github.com/rishabhsingh8445/AutoInsight-Ai.git
-cd AutoInsight-Ai
-npm install
-npm run dev
-```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/rishabhsingh8445/AutoInsight-Ai.git
+   cd AutoInsight-Ai
+   ```
 
-App runs on: http://localhost:8080
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+The application will be available at `http://localhost:8080` (or the port specified by Vite).
 
 ---
 
 ## 🚀 Deployment
 
-- Hosted on **Cloudflare Pages** (natively optimized via `wrangler.jsonc`)
-- Environment variables configured in the Cloudflare dashboard
-- Automated 48-hour background cleanup powered by a secure `/api/cron` route, scheduled via [cron-job.org](https://cron-job.org/)
-- Automatic CI/CD via GitHub
-
----
-
-## 🔐 Security Notes
-
-- API keys stored in environment variables — never committed to source
-- Supabase RLS ensures users can only access their own data
-- Storage policies enforce per-user file isolation
-- Session data cleared on logout
+* **Hosting:** Natively optimized for **Cloudflare Pages** via `wrangler.jsonc`.
+* **Configuration:** Environment variables must be configured in the Cloudflare dashboard.
+* **Cron Jobs:** Automated 48-hour background cleanup powered by a secure `/api/cron` route, scheduled via [cron-job.org](https://cron-job.org/).
+* **CI/CD:** Automatic deployments configured via GitHub integrations.
 
 ---
 
 ## 🧠 Why This Project Stands Out
 
-End-to-end data pipeline in a single interface:
+Provides an end-to-end data pipeline in a single, visually striking interface:
+`Upload → Clean → Visualize → AI Insights → Chat → Export`
 
-```
-Upload → Clean → Visualize → AI Insights → Chat → Export
-```
-
-- Full-dataset AI context — column stats computed over all rows, not a sample
-- Cloud persistence with auto-expiry — no manual cleanup needed
-- Production-grade auth with route guards and RLS
-- Combines: Power BI + AI Analyst + Data Cleaner
+* **Full-dataset AI context:** Column stats computed over all rows, not a sample.
+* **Cloud persistence with auto-expiry:** Zero manual cleanup needed.
+* **Production-grade architecture:** Secure routing, authentication, and RLS.
+* **Cinematic UI:** A highly polished, dynamic aesthetic that feels premium and state-of-the-art.
 
 ---
 
 ## 📌 Future Improvements
 
-- Serverless proxy for AI API calls (remove frontend key exposure)
-- Streaming AI responses in Chat
-- Predictive analytics (ML models)
-- Multi-user dataset sharing
+* Serverless proxy for AI API calls (remove frontend key exposure).
+* Streaming AI responses in Chat for better perceived latency.
+* Predictive analytics using dedicated ML models.
+* Multi-user dataset sharing capabilities.
 
 ---
 
-## 👨‍💻 Author
-
-**Rishabh Singh**
-[GitHub](https://github.com/rishabhsingh8445)
-
----
-
-## ⭐ Support
-
-If you found this useful, consider giving a ⭐ on GitHub
+<div align="center">
+  <p>Developed by <strong>Rishabh Singh</strong> • <a href="https://github.com/rishabhsingh8445">GitHub Profile</a></p>
+  <p>⭐ If you found this project useful, consider giving it a star on GitHub!</p>
+</div>
