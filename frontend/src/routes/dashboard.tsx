@@ -121,7 +121,6 @@ function handleTiltLeave(e: React.MouseEvent<HTMLDivElement>) {
 
 function DashboardPage() {
   const { columns, rows, report } = useDataStore();
-  const groqKey = import.meta.env.VITE_GROQ_API_KEY || "";
   const [loading, setLoading] = useState(false);
   const [sections, setSections] = useState<Sections | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -159,11 +158,10 @@ Column statistics (computed over ALL ${totalRows} rows): ${JSON.stringify(colSta
 Sample rows (first 10 + last 5): ${JSON.stringify(sample)}`;
 
     try {
-      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      const res = await fetch("/api/groq", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${groqKey}` },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
           messages: [{ role: "user", content: prompt }],
           max_tokens: 1500,
         }),

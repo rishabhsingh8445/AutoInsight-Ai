@@ -172,7 +172,6 @@ ${JSON.stringify(sampleRows)}`;
 
 function ChatPage() {
   const { columns, rows } = useDataStore();
-  const groqKey = import.meta.env.VITE_GROQ_API_KEY || "";
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -205,11 +204,11 @@ When the user asks about counts, averages, distributions or trends — use the c
 Use plain text formatting only — no markdown asterisks or symbols.`;
 
     try {
-      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      const res = await fetch("/api/groq", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${groqKey}` },
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
           messages: [
             { role: "system", content: system },
             ...next.map((m) => ({ role: m.role, content: m.content })),

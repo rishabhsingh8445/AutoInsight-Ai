@@ -7,9 +7,7 @@ import {
 import { parseFile } from "@/lib/parseFile";
 import { useDataStore } from "@/store/dataStore";
 import {
-  supabase,
   uploadFileToStorage,
-  saveDatasetMetadata,
   fetchUserDatasets,
   downloadDatasetFile,
   deleteDataset,
@@ -25,12 +23,9 @@ export const Route = createFileRoute("/upload")({
 function LoginGate() {
   const [loading, setLoading] = useState(false);
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = () => {
     setLoading(true);
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/upload` },
-    });
+    window.location.href = "/api/auth/login";
   };
 
   return (
@@ -95,16 +90,11 @@ function UploadPage() {
 
   // Auth
   useEffect(() => {
-    supabase.auth
-      .getSession()
-      .then(({ data: { session } }) => setUser(session?.user ?? null))
+    fetch("/api/auth/session")
+      .then(res => res.json())
+      .then(data => setUser(data.session?.user ?? null))
       .catch(() => setUser(null))
       .finally(() => setCheckingAuth(false));
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => subscription.unsubscribe();
   }, []);
 
   // Load history + cleanup expired on login
@@ -130,28 +120,18 @@ function UploadPage() {
         const { columns, rows, report } = await parseFile(file);
         setData(columns, rows, report);
 
-        // Step 2: upload to Supabase Storage
+        // upload to backend (which handles both storage and metadata)
         setCloudStatus("saving");
-        const storagePath = await uploadFileToStorage(file, user.id);
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("userId", user.id);
+        const record = await uploadFileToStorage(formData);
 
-        if (storagePath) {
-          // Step 3: save metadata to DB
-          const record = await saveDatasetMetadata({
-            userId: user.id,
-            fileName: file.name,
-            storagePath,
-            rowCount: rows.length,
-            columnCount: columns.length,
-            columns,
-          });
-          if (record) {
+        if (record) {
             setHistory(prev => [record, ...prev]);
             setCloudStatus("saved");
-          } else {
-            setCloudStatus("failed");
-          }
         } else {
-          setCloudStatus("failed");
+            setCloudStatus("failed");
         }
       } catch (e) {
         setError(e instanceof Error ? e.message : "Failed to parse file");
@@ -184,8 +164,13 @@ function UploadPage() {
     setLoadingId(record.id);
     setError(null);
     try {
-      const file = await downloadDatasetFile(record.storage_path, record.file_name);
-      if (!file) throw new Error("Could not download file from cloud.");
+      const base64Data = await downloadDatasetFile({ storagePath: record.storage_path, fileName: record.file_name });
+      if (!base64Data) throw new Error("Could not download file from cloud.");
+      
+      // Convert base64 back to File
+      const res = await fetch(`data:application/octet-stream;base64,${base64Data}`);
+      const blob = await res.blob();
+      const file = new File([blob], record.file_name);
       const { columns, rows, report } = await parseFile(file);
       setData(columns, rows, report);
       navigate({ to: "/tables" });
@@ -199,8 +184,8 @@ function UploadPage() {
   const handleDelete = async (record: DatasetRecord) => {
     if (!window.confirm(`Delete "${record.file_name}" from your history?`)) return;
     setDeletingId(record.id);
-    const ok = await deleteDataset(record.id, record.storage_path);
-    if (ok) {
+    const success = await deleteDataset({ id: record.id, storagePath: record.storage_path });
+    if (success) {
       setHistory(prev => prev.filter(r => r.id !== record.id));
     } else {
       setError("Failed to delete dataset.");

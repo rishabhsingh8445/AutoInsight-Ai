@@ -1,6 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { useDataStore } from "@/store/dataStore";
 import { LogOut } from "lucide-react";
 
@@ -19,19 +18,15 @@ export function Sidebar() {
   const { clear } = useDataStore();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        const u = session.user;
-        setProfile({ name: u.user_metadata?.full_name ?? u.user_metadata?.name ?? "Account" });
-      }
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session?.user) {
-        const u = session.user;
-        setProfile({ name: u.user_metadata?.full_name ?? u.user_metadata?.name ?? "Account" });
-      } else setProfile(null);
-    });
-    return () => subscription.unsubscribe();
+    fetch('/api/auth/session')
+      .then(res => res.json())
+      .then(data => {
+        const u = data.session?.user;
+        if (u) {
+          setProfile({ name: u.user_metadata?.full_name ?? u.user_metadata?.name ?? "Account" });
+        }
+      })
+      .catch(() => setProfile(null));
   }, []);
 
   useEffect(() => {
@@ -54,7 +49,7 @@ export function Sidebar() {
 
   const handleLogout = async () => {
     clear();
-    await supabase.auth.signOut();
+    await fetch('/api/auth/logout', { method: 'POST' });
     window.location.href = "/upload";
   };
 

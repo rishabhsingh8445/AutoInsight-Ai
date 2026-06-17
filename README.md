@@ -2,7 +2,6 @@
   <h1>🚀 AutoInsight AI</h1>
   <p><strong>AI-Powered Data Analysis Platform (Power BI + ChatGPT Inspired)</strong></p>
   <p>
-    <a href="https://autoinsight-ai.rs01.workers.dev/"><b>Live Demo</b></a> •
     <a href="#-core-features"><b>Features</b></a> •
     <a href="#️-tech-stack"><b>Tech Stack</b></a> •
     <a href="#-project-structure"><b>Structure</b></a>
@@ -21,10 +20,9 @@ It features a **cinematic dark tech UI** and combines **data cleaning, visualiza
 
 ### 📂 Smart Data Processing
 * **Multi-format Support:** Upload CSV / Excel files.
-* **Auto-Cleaning:** Automatically cleans unformatted datasets, handling missing values, duplicates, and inconsistencies.
+* **Auto-Cleaning:** Automatically cleans unformatted datasets, handling missing values, duplicates, and inconsistencies using Pandas.
 * **Cloud Storage:** Files are securely saved to your account via Supabase Storage.
 * **Dataset History:** Previous uploads are accessible across devices and sessions.
-* **Auto-Expiry:** Uploaded files are automatically deleted after 48 hours for data hygiene. A secure API route (`/api/cron`) triggered by an external service (e.g., cron-job.org) handles global cleanup, with a client-side fallback.
 
 ### 📊 Power BI–Style Tables
 * **Conditional Formatting:** Low / Mid / High color coding for instant visual data comprehension.
@@ -45,11 +43,11 @@ It features a **cinematic dark tech UI** and combines **data cleaning, visualiza
 ### 💬 Chat with Data (AI Assistant)
 * **Conversational Interface:** Ask questions about your data in plain English.
 * **High Accuracy:** Full column-level statistics are sent as context, ensuring accurate answers even across 10,000+ row datasets.
-* **Powered by Groq:** Utilizing the lightning-fast Llama 3.3 70B model.
+* **Powered by Groq:** Utilizing the lightning-fast Llama 3.3 70B model via a secure Python proxy backend.
 
 ### 🔐 Authentication & Data Security
-* **Seamless Login:** Google OAuth powered by Supabase Auth.
-* **Secure Navigation:** Route-level auth guards protect all application pages.
+* **Seamless Login:** Google OAuth powered by Supabase Auth (with secure HTTP-only cookies).
+* **Secure API:** API keys are never exposed to the frontend; all AI and Database requests run through a secure FastAPI backend.
 * **Data Isolation:** Per-user data isolation utilizing Row Level Security (RLS) in PostgreSQL.
 
 ---
@@ -59,14 +57,13 @@ It features a **cinematic dark tech UI** and combines **data cleaning, visualiza
 | Layer | Technology |
 |-------|------------|
 | **Frontend** | React 19 + Vite + TypeScript |
+| **Backend** | Python + FastAPI + Pandas |
 | **Styling** | Tailwind CSS v4 + Radix UI + Custom Cinematic CSS Animations |
-| **Routing** | TanStack Router (SSR-capable) |
+| **Routing** | TanStack Router |
 | **State Management**| Zustand + localStorage persistence |
-| **Backend / Auth** | Supabase (PostgreSQL + Auth + Storage) |
-| **AI Engine** | Groq API — Llama 3.3 70B |
+| **Database / Auth** | Supabase (PostgreSQL + Auth + Storage) |
+| **AI Engine** | Groq API — Llama 3.3 70B (Proxied through FastAPI) |
 | **Visualization** | Recharts |
-| **Data Parsing** | PapaParse, SheetJS (xlsx), ExcelJS |
-| **Deployment** | Cloudflare Pages |
 
 ---
 
@@ -74,37 +71,26 @@ It features a **cinematic dark tech UI** and combines **data cleaning, visualiza
 
 ```text
 AutoInsight-Ai/
-├── src/
-│   ├── components/       # Reusable React components
-│   │   ├── ui/           # Radix UI primitives & generic design components
-│   │   ├── Sidebar.tsx   # Main application navigation sidebar
-│   │   ├── WorkflowShowcase.tsx # Landing page workflow animation
-│   │   └── BackgroundParticles.tsx # Cinematic background effect
-│   ├── lib/              # Core utilities and configuration
-│   │   ├── parseFile.ts  # CSV/Excel parsing logic (PapaParse, SheetJS)
-│   │   ├── supabase.ts   # Supabase client configuration
-│   │   ├── theme.ts      # Theming utilities
-│   │   └── utils.ts      # Helper functions (Tailwind merge, clsx, etc.)
-│   ├── routes/           # TanStack Router page components
-│   │   ├── api/          # API routes (e.g., cron jobs)
-│   │   ├── index.tsx     # Landing page
-│   │   ├── upload.tsx    # Data upload interface
-│   │   ├── tables.tsx    # Data grid view
-│   │   ├── analytics.tsx # Charts and AI insights
-│   │   ├── dashboard.tsx # Main dashboard overview
-│   │   └── chat.tsx      # Conversational AI interface
-│   ├── store/            # Global state management
-│   │   └── dataStore.ts  # Zustand store for dataset state
-│   ├── hooks/            # Custom React hooks
-│   │   └── use-mobile.tsx # Responsive utility hook
-│   ├── router.tsx        # TanStack Router configuration
-│   ├── routeTree.gen.ts  # Auto-generated route definitions
-│   └── styles.css        # Global CSS, Tailwind config, & Custom Cinematic Styling
-├── public/               # Static assets
-├── package.json          # Project dependencies and scripts
-├── vite.config.ts        # Vite build configuration
-├── eslint.config.js      # ESLint configuration
-└── wrangler.jsonc        # Cloudflare Workers configuration
+├── frontend/             # React Vite Application
+│   ├── src/
+│   │   ├── components/   # Reusable UI components
+│   │   ├── lib/          # Utilities, API fetchers
+│   │   ├── routes/       # TanStack Pages (Upload, Tables, Dashboard)
+│   │   ├── store/        # Zustand global state
+│   │   └── styles.css    # Cinematic Styling
+│   ├── package.json
+│   └── vite.config.ts    # Proxies API requests to Python
+│
+├── backend/              # Python FastAPI Application
+│   ├── routes/
+│   │   ├── auth.py       # Supabase PKCE OAuth Flow
+│   │   ├── chat.py       # Secure Groq AI endpoint
+│   │   └── datasets.py   # Pandas CSV/Excel Data parsing & storage
+│   ├── core/             # Supabase client config
+│   ├── requirements.txt
+│   └── main.py           # FastAPI server entry point
+│
+└── .env                  # Shared environment variables
 ```
 
 ---
@@ -117,8 +103,7 @@ Create a `.env` file in the root directory:
 VITE_GROQ_API_KEY=your_groq_api_key
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-VITE_CRON_SECRET=your_secret_cron_password
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
 
 ---
@@ -175,26 +160,31 @@ using (bucket_id = 'datasets' AND (storage.foldername(name))[1] = auth.uid()::te
    cd AutoInsight-Ai
    ```
 
-2. **Install dependencies:**
+2. **Start the Python Backend (Terminal 1):**
    ```bash
-   npm install
+   cd backend
+   python -m venv venv
+   .\venv\Scripts\activate   # (Windows)
+   # source venv/bin/activate # (Mac/Linux)
+   pip install -r requirements.txt
+   python main.py
    ```
+   *The backend will run on `http://localhost:8000`*
 
-3. **Start the development server:**
+3. **Start the React Frontend (Terminal 2):**
    ```bash
+   cd frontend
+   npm install
    npm run dev
    ```
-
-The application will be available at `http://localhost:8080` (or the port specified by Vite).
+   *The frontend will be available at `http://localhost:5173`. API requests are automatically proxied to Port 8000.*
 
 ---
 
 ## 🚀 Deployment
 
-* **Hosting:** Natively optimized for **Cloudflare Pages** via `wrangler.jsonc`.
-* **Configuration:** Environment variables must be configured in the Cloudflare dashboard.
-* **Cron Jobs:** Automated 48-hour background cleanup powered by a secure `/api/cron` route, scheduled via [cron-job.org](https://cron-job.org/).
-* **CI/CD:** Automatic deployments configured via GitHub integrations.
+- **Frontend:** Can be deployed as a static site (Cloudflare Pages, Vercel, Netlify) with build command `npm run build`.
+- **Backend:** Can be deployed to any Python host (Render, Railway, AWS, DigitalOcean) running `uvicorn main:app --host 0.0.0.0 --port 8000`.
 
 ---
 
@@ -204,18 +194,9 @@ Provides an end-to-end data pipeline in a single, visually striking interface:
 `Upload → Clean → Visualize → AI Insights → Chat → Export`
 
 * **Full-dataset AI context:** Column stats computed over all rows, not a sample.
-* **Cloud persistence with auto-expiry:** Zero manual cleanup needed.
-* **Production-grade architecture:** Secure routing, authentication, and RLS.
+* **Secure API Architecture:** API keys and heavy data processing are securely handled by a Python FastAPI backend.
+* **Production-grade architecture:** Secure routing, HTTP-only cookies, and Row Level Security.
 * **Cinematic UI:** A highly polished, dynamic aesthetic that feels premium and state-of-the-art.
-
----
-
-## 📌 Future Improvements
-
-* Serverless proxy for AI API calls (remove frontend key exposure).
-* Streaming AI responses in Chat for better perceived latency.
-* Predictive analytics using dedicated ML models.
-* Multi-user dataset sharing capabilities.
 
 ---
 

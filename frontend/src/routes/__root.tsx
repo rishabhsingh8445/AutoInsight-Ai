@@ -1,8 +1,10 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts, redirect } from "@tanstack/react-router";
+import { Outlet, Link, createRootRoute, redirect } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
 import { BackgroundParticles } from "@/components/BackgroundParticles";
 import { Sidebar } from "@/components/Sidebar";
-import { supabase } from "@/lib/supabase";
+
+
+import { getAuthSession } from "@/lib/api";
 
 const PROTECTED = ["/dashboard", "/tables", "/analytics", "/chat"];
 
@@ -35,22 +37,15 @@ export const Route = createRootRoute({
   beforeLoad: async ({ location }) => {
     const isProtected = PROTECTED.some((p) => location.pathname.startsWith(p));
     if (!isProtected) return;
-    const { data: { session } } = await supabase.auth.getSession();
+    
+    // Check session securely using server function
+    const session = await getAuthSession();
+    
     if (!session) { throw redirect({ to: "/upload" }); }
   },
-  shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
 });
-
-function RootShell({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head><HeadContent /></head>
-      <body>{children}<Scripts /></body>
-    </html>
-  );
-}
 
 function RootComponent() {
   return (
