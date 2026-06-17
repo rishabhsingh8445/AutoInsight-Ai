@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://autoinsight-ai-backend-akhu.onrender.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
