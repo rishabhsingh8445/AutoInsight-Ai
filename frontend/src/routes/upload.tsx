@@ -128,7 +128,8 @@ function UploadPage() {
         formData.append("columns", JSON.stringify(columns));
         formData.append("rowCount", String(rows.length));
         
-        const record = await uploadFileToStorage(formData);
+        const responseData = await uploadFileToStorage(formData);
+        const record = responseData?.record;
 
         if (record) {
             setHistory(prev => [record, ...prev]);
