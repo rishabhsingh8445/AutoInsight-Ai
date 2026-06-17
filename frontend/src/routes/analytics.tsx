@@ -190,11 +190,10 @@ const downloadSnapshotImage = (
   canvas.height = cH;
   const ctx = canvas.getContext("2d")!;
   ctx.scale(SCALE, SCALE);
-
-  // Background
+  // Background (Dark mode)
   const bgGrad = ctx.createLinearGradient(0, 0, W, H);
-  bgGrad.addColorStop(0, "#000000");
-  bgGrad.addColorStop(1, "#ffffff");
+  bgGrad.addColorStop(0, "#0a0a0f");
+  bgGrad.addColorStop(1, "#12121a");
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, W, H);
 
@@ -287,7 +286,7 @@ const downloadSnapshotImage = (
     ctx.fillText("⚡ " + filterStr, 42, 210);
   }
 
-  // Chart area â€” get SVG from DOM and draw it
+  // Chart area — get SVG from DOM and draw it
   const chartAreaY = filterStr ? 230 : 200;
   const chartAreaH = H - chartAreaY - 60;
 
@@ -296,8 +295,12 @@ const downloadSnapshotImage = (
     const cloned = svgEl.cloneNode(true) as SVGElement;
     const svgW = svgEl.clientWidth || 800;
     const svgH = svgEl.clientHeight || 400;
-    cloned.setAttribute("width", String(W - 64));
-    cloned.setAttribute("height", String(chartAreaH));
+    
+    // Set viewBox to the original size so the content scales correctly
+    cloned.setAttribute("viewBox", `0 0 ${svgW} ${svgH}`);
+    // Multiply width/height by SCALE to force the browser to rasterize the SVG at 2x resolution!
+    cloned.setAttribute("width", String((W - 64) * SCALE));
+    cloned.setAttribute("height", String(chartAreaH * SCALE));
     cloned.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     bg.setAttribute("width", "100%"); bg.setAttribute("height", "100%"); bg.setAttribute("fill", "transparent");
