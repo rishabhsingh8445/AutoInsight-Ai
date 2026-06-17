@@ -2,6 +2,7 @@
   <h1>🚀 AutoInsight AI</h1>
   <p><strong>AI-Powered Data Analysis Platform (Power BI + ChatGPT Inspired)</strong></p>
   <p>
+    <a href="https://auto-insightai.vercel.app/"><b>🔴 Live Demo</b></a> •
     <a href="#-core-features"><b>Features</b></a> •
     <a href="#️-tech-stack"><b>Tech Stack</b></a> •
     <a href="#-project-structure"><b>Structure</b></a>
