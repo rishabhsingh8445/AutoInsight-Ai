@@ -179,7 +179,8 @@ Sample rows (first 10 + last 5): ${JSON.stringify(sample)}`;
   };
 
   const downloadPDF = async () => {
-    const { default: jsPDF } = await import("jspdf");
+    const jsPDFModule = await import("jspdf");
+    const jsPDF = jsPDFModule.jsPDF || jsPDFModule.default;
     const doc = new jsPDF({ unit: "mm", format: "a4" });
 
     const PW = 210;

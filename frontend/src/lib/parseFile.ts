@@ -90,7 +90,8 @@ export async function parseFile(file: File) {
 }
 
 export async function downloadCSV(columns: string[], rows: Row[], fileName = "cleaned_data.xlsx") {
-  const ExcelJS = await import("exceljs");
+  const ExcelJSModule = await import("exceljs");
+  const ExcelJS = ExcelJSModule.default || ExcelJSModule;
   const wb = new ExcelJS.Workbook();
   const ws = wb.addWorksheet("Cleaned Data");
 

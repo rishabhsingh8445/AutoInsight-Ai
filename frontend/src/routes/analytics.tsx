@@ -215,7 +215,7 @@ const downloadSnapshotImage = (
   // Logo / app name
   ctx.fillStyle = ACCENT;
   ctx.font = "bold 13px system-ui, sans-serif";
-  ctx.fillText("âœ¦ AutoInsight AI", 32, 32);
+  ctx.fillText("✦ AutoInsight AI", 32, 32);
 
   // Timestamp top right
   ctx.fillStyle = "rgba(148,163,184,0.6)";
@@ -232,7 +232,7 @@ const downloadSnapshotImage = (
   // Chart title + subtitle
   ctx.fillStyle = "rgba(148,163,184,0.9)";
   ctx.font = "14px system-ui, sans-serif";
-  ctx.fillText(`${chartTitle}  Â·  ${chartSubtitle}`, 32, 92);
+  ctx.fillText(`${chartTitle}  ·  ${chartSubtitle}`, 32, 92);
 
   // Divider
   ctx.strokeStyle = "rgba(255,255,255,0.08)";
@@ -273,7 +273,7 @@ const downloadSnapshotImage = (
 
   // Active filters display
   const activeFilters = Object.entries(filters).filter(([, v]) => Boolean(v));
-  const drillPath = drillStack.map(d => `${d.col}=${d.value}`).join(" â†’ ");
+  const drillPath = drillStack.map(d => `${d.col}=${d.value}`).join(" → ");
   const filterStr = [
     ...activeFilters.map(([k, v]) => `${k}: ${v}`),
     ...(drillPath ? [`Drill: ${drillPath}`] : [])
@@ -284,7 +284,7 @@ const downloadSnapshotImage = (
     ctx.fill();
     ctx.fillStyle = ACCENT;
     ctx.font = "11px system-ui, sans-serif";
-    ctx.fillText("âš¡ " + filterStr, 42, 210);
+    ctx.fillText("⚡ " + filterStr, 42, 210);
   }
 
   // Chart area â€” get SVG from DOM and draw it
@@ -400,8 +400,8 @@ function drawFooterAndSave(
   ctx.fillStyle = "rgba(148,163,184,0.5)";
   ctx.font = "10px system-ui, sans-serif";
   const summary = chartType !== "scatter"
-    ? `${chartData.length} categories  Â·  Chart: ${chartType}`
-    : `${chartData.length} data points  Â·  Chart: scatter`;
+    ? `${chartData.length} categories  ·  Chart: ${chartType}`
+    : `${chartData.length} data points  ·  Chart: scatter`;
   ctx.fillText(summary, 32, H - 26);
 
   // Footer right â€” watermark
@@ -646,8 +646,8 @@ function AnalyticsPage() {
                     <div className="text-xs font-semibold truncate">{bm.name}</div>
                     <div className="text-[10px] text-muted-foreground mt-0.5">{bm.createdAt}</div>
                     <div className="text-[10px] text-primary mt-1">
-                      {bm.chartType} Â· {bm.xCol}
-                      {Object.values(bm.filters).filter(Boolean).length > 0 && ` Â· ${Object.values(bm.filters).filter(Boolean).length} filter(s)`}
+                      {bm.chartType} · {bm.xCol}
+                      {Object.values(bm.filters).filter(Boolean).length > 0 && ` · ${Object.values(bm.filters).filter(Boolean).length} filter(s)`}
                     </div>
                   </div>
                   <div className="flex items-center gap-1 ml-2 shrink-0">
