@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, Response, HTTPException
 from fastapi.responses import RedirectResponse
 from core.supabase import get_supabase
 import json
+import os
 
 router = APIRouter()
 
@@ -37,8 +38,10 @@ def login(request: Request):
 @router.get("/callback")
 def auth_callback(request: Request):
     code = request.query_params.get("code")
+    frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+    
     if not code:
-        return RedirectResponse("http://localhost:5173/upload?error=auth-failed-no-code")
+        return RedirectResponse(f"{frontend_url}/upload?error=auth-failed-no-code")
         
     supabase = get_supabase()
     
@@ -53,13 +56,13 @@ def auth_callback(request: Request):
         access_token = res.session.access_token
         refresh_token = res.session.refresh_token
         
-        response = RedirectResponse("http://localhost:5173/tables")
+        response = RedirectResponse(f"{frontend_url}/tables")
         response.set_cookie(key="sb-access-token", value=access_token, httponly=True, samesite="lax", max_age=res.session.expires_in)
         response.set_cookie(key="sb-refresh-token", value=refresh_token, httponly=True, samesite="lax", max_age=res.session.expires_in)
         return response
     except Exception as e:
         print(f"Auth error: {e}")
-        return RedirectResponse("http://localhost:5173/upload?error=auth-failed")
+        return RedirectResponse(f"{frontend_url}/upload?error=auth-failed")
 
 @router.get("/session")
 def get_session(request: Request):
