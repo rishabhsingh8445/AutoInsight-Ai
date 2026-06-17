@@ -17,30 +17,36 @@ def get_user_id(request: Request) -> str:
         raise HTTPException(status_code=401, detail="Invalid token")
 
 @router.post("/upload")
-async def upload_dataset(request: Request, file: UploadFile = File(...)):
+async def upload_dataset(
+    request: Request,
+    file: UploadFile = File(...),
+):
     user_id = get_user_id(request)
     contents = await file.read()
     
-    try:
-        if file.filename.endswith('.csv'):
-            df = pd.read_csv(io.BytesIO(contents))
-        elif file.filename.endswith(('.xls', '.xlsx')):
-            df = pd.read_excel(io.BytesIO(contents))
-        else:
-            raise HTTPException(status_code=400, detail="Unsupported file format")
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to parse file: {str(e)}")
-
-    columns = df.columns.tolist()
-    row_count = len(df)
+    # Extract metadata passed from frontend instead of running Pandas
+    form = await request.form()
+    columns_str = form.get("columns", "[]")
+    row_count_str = form.get("rowCount", "0")
     
+    import json
+    try:
+        columns = json.loads(columns_str)
+        row_count = int(row_count_str)
+    except:
+        columns = []
+        row_count = 0
+        
+    if not columns:
+        raise HTTPException(status_code=400, detail="Missing columns metadata")
+        
     # Generate basic report structure matching what frontend expects
     report = {
         "fileName": file.filename,
         "rowCount": row_count,
         "colCount": len(columns),
-        "columns": [{"name": c, "type": str(df[c].dtype), "missing": int(df[c].isna().sum())} for c in columns],
-        "summary": "Parsed via Python Pandas"
+        "columns": [{"name": c, "type": "string", "missing": 0} for c in columns],
+        "summary": "Parsed via Frontend"
     }
 
     # Upload to Supabase Storage
@@ -76,9 +82,8 @@ async def upload_dataset(request: Request, file: UploadFile = File(...)):
         print(f"DB insert error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"DB insert failed: {str(e)}")
 
-    # Return the first 500 rows for preview
-    preview_df = df.head(500).fillna("")
-    rows = preview_df.to_dict(orient="records")
+    # Frontend already has the rows, no need to send them back
+    rows = []
 
     return {
         "record": db_res.data[0],

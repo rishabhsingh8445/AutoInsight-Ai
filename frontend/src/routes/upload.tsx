@@ -125,6 +125,9 @@ function UploadPage() {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("userId", user.id);
+        formData.append("columns", JSON.stringify(columns));
+        formData.append("rowCount", String(rows.length));
+        
         const record = await uploadFileToStorage(formData);
 
         if (record) {
