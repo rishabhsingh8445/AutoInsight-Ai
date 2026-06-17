@@ -157,7 +157,11 @@ export async function downloadCSV(columns: string[], rows: Row[], fileName = "cl
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = fileName.replace(".csv", ".xlsx");
+  
+  // Ensure the filename always ends in .xlsx regardless of the original extension
+  const baseName = fileName.replace(/\.[^/.]+$/, "");
+  a.download = `${baseName}.xlsx`;
+  
   a.click();
   URL.revokeObjectURL(url);
 }
