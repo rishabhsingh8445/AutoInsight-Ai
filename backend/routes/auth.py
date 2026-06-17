@@ -9,8 +9,11 @@ router = APIRouter()
 @router.get("/login")
 def login(request: Request):
     supabase = get_supabase()
-    # Replace with your actual frontend URL if deployed
-    redirect_url = str(request.url_for('auth_callback'))
+    frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+    if "localhost" in frontend_url:
+        redirect_url = str(request.url_for('auth_callback'))
+    else:
+        redirect_url = f"{frontend_url}/api/auth/callback"
     
     res = supabase.auth.sign_in_with_oauth(
         {
