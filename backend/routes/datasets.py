@@ -56,20 +56,25 @@ async def upload_dataset(request: Request, file: UploadFile = File(...)):
     )
     
     if hasattr(res, "error") and res.error:
-        raise HTTPException(status_code=500, detail="Storage upload failed")
+        print(f"Storage upload error: {res.error}")
+        raise HTTPException(status_code=500, detail=f"Storage upload failed: {res.error}")
 
-    # Insert metadata to DB
-    db_res = supabase.table("datasets").insert({
-        "user_id": user_id,
-        "file_name": file.filename,
-        "storage_path": storage_path,
-        "row_count": row_count,
-        "column_count": len(columns),
-        "columns": columns
-    }).execute()
-    
-    if len(db_res.data) == 0:
-        raise HTTPException(status_code=500, detail="DB insert failed")
+    try:
+        # Insert metadata to DB
+        db_res = supabase.table("datasets").insert({
+            "user_id": user_id,
+            "file_name": file.filename,
+            "storage_path": storage_path,
+            "row_count": row_count,
+            "column_count": len(columns),
+            "columns": columns
+        }).execute()
+        
+        if len(db_res.data) == 0:
+            raise HTTPException(status_code=500, detail="DB insert failed: No data returned")
+    except Exception as e:
+        print(f"DB insert error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"DB insert failed: {str(e)}")
 
     # Return the first 500 rows for preview
     preview_df = df.head(500).fillna("")
